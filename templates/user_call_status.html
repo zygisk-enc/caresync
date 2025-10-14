@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Video Calls</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/call_requests.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="requests-container">
+        <header class="requests-header">
+            <h1>My Video Calls</h1>
+            <a href="{{ url_for('main.home') }}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </header>
+        
+        <main class="call-list">
+            {% if calls %}
+                {% for call, doctor in calls %}
+                    <div class="call-card status-card status-{{ call.status|lower }}">
+                        <div class="info-group">
+                            <i class="fas fa-user-md"></i>
+                            <div>
+                                <span class="doctor-name">Dr. {{ doctor.full_name }}</span>
+                                <span class="doctor-spec">{{ doctor.specialization }}</span>
+                            </div>
+                        </div>
+                        <div class="info-group"><i class="fas fa-calendar-alt"></i> {{ call.scheduled_time.strftime('%b %d, %Y at %I:%M %p') }}</div>
+                        <div class="status-tag">{{ call.status }}</div>
+                        
+                            {% if call.status == 'Approved' %}
+                                {% set time_diff = call.scheduled_time - now %}
+                                {# --- FIX: Button is now enabled from the scheduled time until 5 minutes after --- #}
+                                {% if time_diff <= timedelta(seconds=0) and time_diff > timedelta(minutes=-5) %}
+                                    <a href="{{ url_for('main.call_page', call_id=call.id) }}" class="btn btn-join" target="_blank">Join Call</a>
+                                {% else %}
+                                    <button class="btn btn-join" disabled title="The 5-minute window to join this call has not opened or has passed.">Join Call</button>
+                                {% endif %}
+                            {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-calls">You have not requested any video calls.</p>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

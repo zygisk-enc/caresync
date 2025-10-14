@@ -1,0 +1,3 @@
+flask db init
+flask db migrate -m "Initial user table creation"
+flask db upgrade

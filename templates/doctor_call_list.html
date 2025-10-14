@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call Requests</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/call_requests.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="requests-container">
+        <header class="requests-header">
+            <h1>Video Call Requests</h1>
+            <a href="{{ url_for('doctors.dashboard') }}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            <section class="requests-section">
+                <h2>Pending Requests</h2>
+                {% if pending_calls %}
+                    <div class="call-list">
+                    {% for call, user in pending_calls %}
+                        <div class="call-card">
+                            <div class="info-group"><i class="fas fa-user"></i> {{ user.full_name }}</div>
+                            <div class="info-group"><i class="fas fa-calendar-alt"></i> {{ call.scheduled_time.strftime('%b %d, %Y') }}</div>
+                            <div class="info-group"><i class="fas fa-clock"></i> {{ call.scheduled_time.strftime('%I:%M %p') }}</div>
+                            <div class="call-actions">
+                                <form action="{{ url_for('video_call.update_call_status', call_id=call.id) }}" method="POST">
+                                    <input type="hidden" name="action" value="Approved">
+                                    <button type="submit" class="btn btn-approve">Approve</button>
+                                </form>
+                                <form action="{{ url_for('video_call.update_call_status', call_id=call.id) }}" method="POST">
+                                    <input type="hidden" name="action" value="Rejected">
+                                    <button type="submit" class="btn btn-reject">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="no-calls">No pending call requests.</p>
+                {% endif %}
+            </section>
+
+                <section class="requests-section">
+                    <h2>Upcoming Approved Calls</h2>
+                    {% if approved_calls %}
+                        <div class="call-list">
+                        {% for call, user in approved_calls %}
+                            <div class="call-card approved">
+                                <div class="info-group"><i class="fas fa-user"></i> {{ user.full_name }}</div>
+                                <div class="info-group"><i class="fas fa-calendar-alt"></i> {{ call.scheduled_time.strftime('%b %d, %Y') }}</div>
+                                <div class="info-group"><i class="fas fa-clock"></i> {{ call.scheduled_time.strftime('%I:%M %p') }}</div>
+                                
+                                {# --- FIX: Added timed logic for the doctor's join button --- #}
+                                {% set time_diff = call.scheduled_time - now %}
+                                {% if time_diff <= timedelta(seconds=0) and time_diff > timedelta(minutes=-5) %}
+                                    <a href="{{ url_for('main.call_page', call_id=call.id) }}" class="btn btn-join" target="_blank">Join Call</a>
+                                {% else %}
+                                    <button class="btn btn-join" disabled title="The 5-minute window to join this call has not opened or has passed.">Join Call</button>
+                                {% endif %}
+
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="no-calls">No upcoming approved calls.</p>
+                    {% endif %}
+                </section>
+        </main>
+    </div>
+</body>
+</html>

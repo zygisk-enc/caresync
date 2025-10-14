@@ -1,0 +1,49 @@
+/* static/css/call-notifications.css */
+
+/* --- Glowing Button Effect --- */
+@keyframes glow {
+    0% { box-shadow: 0 0 5px #28a745, 0 0 10px #28a745; }
+    50% { box-shadow: 0 0 20px #28a745, 0 0 30px #28a745; }
+    100% { box-shadow: 0 0 5px #28a745, 0 0 10px #28a745; }
+}
+
+.quick-action-btn.glowing-green {
+    background-color: #28a745; /* Green background */
+    border-color: #28a745;
+    animation: glow 1.5s infinite;
+}
+.quick-action-btn.glowing-green:hover {
+    background-color: #1f7a37;
+}
+
+/* --- Modal Styling (You can add this to an existing CSS file if you prefer) --- */
+.modal-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
+    z-index: 2000; display: flex; justify-content: center; align-items: center;
+}
+.modal-backdrop.hidden { display: none; }
+.modal-box {
+    background-color: #121212; padding: 2rem; border-radius: 12px;
+    border: 1px solid #222; width: 90%; max-width: 400px;
+    text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.modal-box h3 { margin-top: 0; }
+.modal-box p { color: #B0B0B0; margin-bottom: 2rem; }
+.modal-actions { display: flex; justify-content: center; gap: 1rem; }
+.action-btn.home { background-color: #6c757d; color: white; border:none; }
+.action-btn.book { background-color: #28a745; color: white; border:none; }
+
+
+/* static/css/call-notifications.css */
+@keyframes glow {
+    0% { box-shadow: 0 0 5px #28a745, 0 0 10px #28a745; }
+    50% { box-shadow: 0 0 20px #28a745, 0 0 30px #28a745; }
+    100% { box-shadow: 0 0 5px #28a745, 0 0 10px #28a745; }
+}
+.quick-action-btn.glowing-green {
+    background-color: #28a745;
+    border-color: #28a745;
+    animation: glow 1.5s infinite;
+}
+/* You can copy the modal styles from the previous answer into this file as well */

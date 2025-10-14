@@ -1,0 +1,434 @@
+/* =================================================================== */
+/* A. DESIGN SYSTEM & FONT IMPORT */
+/* =================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-family: 'Inter', sans-serif;
+    --background-dark: #121212;
+    --surface-1: #1E1E1E;
+    --surface-2: #2a2a2a;
+    --surface-hover: #333333;
+    --primary-accent: #F7971E;
+    --primary-accent-hover: #f8a947;
+    --text-main: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --border-color: #383838;
+    --border-radius-lg: 16px;
+    --border-radius-md: 12px;
+    --border-radius-sm: 8px;
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* =================================================================== */
+/* B. CORE & PAGE LAYOUT */
+/* =================================================================== */
+body {
+    background-color: var(--background-dark);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    margin: 0;
+}
+
+#app-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.main-header {
+    text-align: left;
+
+    margin-bottom: 1rem;
+}
+
+#logo-link {
+    text-decoration: none;
+}
+
+.header-logo {
+    font-size: 1.8rem;
+    color: #E0E0E0;
+    font-weight: 500;
+    margin-left: 24px;
+}
+
+.doctors-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+/* =================================================================== */
+/* C. TOP CONTROLS (SEARCH & FILTERS) */
+/* =================================================================== */
+.top-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.page-search-bar {
+    background-color: var(--surface-1);
+    border-radius: var(--border-radius-md);
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+.page-search-bar input {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    height: 50px;
+    color: var(--text-main);
+    font-size: 1rem;
+}
+.page-search-bar .fa-search {
+    color: var(--text-secondary);
+}
+
+.specialization-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.spec-filter-btn {
+    background-color: var(--surface-1);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.spec-filter-btn:hover {
+    background-color: var(--surface-hover);
+    color: var(--text-main);
+}
+.spec-filter-btn.active {
+    background-color: var(--primary-accent);
+    color: var(--background-dark);
+    font-weight: 600;
+    border-color: var(--primary-accent);
+}
+
+/* =================================================================== */
+/* D. SPLIT LAYOUT */
+/* =================================================================== */
+.doctors-split-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) 2fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.right-panel {
+    background-color: var(--surface-1);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    position: sticky;
+    top: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.left-panel::-webkit-scrollbar {
+    width: 8px;
+}
+.left-panel::-webkit-scrollbar-track {
+    background: var(--surface-1);
+    border-radius: 10px;
+}
+.left-panel::-webkit-scrollbar-thumb {
+    background-color: var(--surface-2);
+    border-radius: 10px;
+    border: 2px solid var(--surface-1);
+}
+.left-panel::-webkit-scrollbar-thumb:hover {
+    background-color: var(--surface-hover);
+}
+
+/* =================================================================== */
+/* E. DOCTOR LIST & PROFILE COMPONENTS */
+/* =================================================================== */
+.doctor-list-item-final {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--surface-1);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease-in-out;
+}
+.doctor-list-item-final:hover {
+    background-color: var(--surface-2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+.doctor-list-item-final.active {
+    background-color: var(--surface-2);
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 15px rgba(247, 151, 30, 0.2);
+}
+.doctor-list-item-final img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.doctor-list-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+.doctor-list-info p {
+    margin: 4px 0 0 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.doctor-list-item-final.hidden {
+    display: none;
+}
+
+.doctor-profile-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.profile-header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--surface-2);
+}
+.profile-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.profile-header .spec {
+    color: var(--primary-accent);
+    font-weight: 500;
+}
+.profile-hstrip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background-color: var(--surface-2);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+}
+.pill {
+    display: flex;
+    flex-direction: column;
+}
+.pill .label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.pill .value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.profile-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.secondary-actions {
+    display: flex;
+    gap: 1rem;
+    align-self: flex-start;
+}
+.primary-actions {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+}
+.action-btn {
+    flex: 1;
+    height: 48px;
+    border-radius: var(--border-radius-md);
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.2s;
+}
+.action-btn.book {
+    background: var(--primary-accent);
+    color: var(--background-dark);
+    border-color: var(--primary-accent);
+}
+.action-btn.book:hover {
+    background: var(--primary-accent-hover);
+    border-color: var(--primary-accent-hover);
+}
+.action-btn.status {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+.action-btn.status:hover {
+    background: var(--surface-2);
+    color: var(--text-main);
+}
+.icon-btn {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.icon-btn:hover {
+    background: var(--surface-hover);
+    color: var(--text-main);
+}
+
+.skeleton {
+    opacity: 0.7;
+    animation: skeleton-loading 1.5s infinite linear;
+    background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-hover) 50%, var(--surface-2) 75%);
+    background-size: 200% 100%;
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.skeleton-text {
+    height: 20px;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 10px;
+}
+
+.appt-container { display: flex; flex-direction: column; gap: 1rem; }
+.appt-grid { display: grid; gap: 0.25rem; }
+.time-category-header { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600; }
+.appt-tile, .appt-date, .appt-time {
+    background: var(--surface-2);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 44px;
+    font-weight: 600;
+}
+.appt-tile:hover, .appt-date:hover, .appt-time:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-secondary);
+}
+.appt-tile.selected, .appt-date.selected, .appt-time.selected {
+    background: var(--primary-accent);
+    color: var(--background-dark);
+    border-color: var(--primary-accent);
+}
+.appt-date { aspect-ratio: 1/1; width: 100%; }
+.appt-tile.disabled, .appt-date.disabled {
+    background: var(--surface-1);
+    color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.appt-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+.appt-cancel, .appt-book-now {
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--border-radius-md);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+.appt-cancel { background: var(--surface-2); color: var(--text-main); }
+.appt-book-now { background: var(--primary-accent); color: var(--background-dark); }
+.appt-book-now:disabled { background: var(--surface-hover); color: #777; cursor: not-allowed; }
+
+/* =================================================================== */
+/* F. RESPONSIVE DESIGN */
+/* =================================================================== */
+
+@media (max-width: 992px) {
+    .doctors-split-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 0;
+    }
+
+    .left-panel {
+        max-height: 50vh;
+    }
+
+    .right-panel {
+        position: static;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #app-wrapper {
+        padding: 0 1rem;
+    }
+
+    .doctors-page-container {
+        gap: 1.5rem;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-hstrip {
+        grid-template-columns: 1fr;
+    }
+
+    .primary-actions {
+        flex-direction: column;
+    }
+}
+/* --- FIX: Custom Time Input Overflow --- */
+.appt-container input[type="time"] {
+    box-sizing: border-box; /* This forces the padding to be included inside the width, not added to it */
+}

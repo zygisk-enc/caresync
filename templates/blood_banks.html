@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Locator - CareSync</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blood_banks.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div id="app-wrapper">
+        <header class="main-header">
+            <a href="{{ url_for('doctors.dashboard') if session['doctor_id'] else url_for('main.home') }}" id="logo-link">
+                <h1 class="header-logo">CareSync</h1>
+            </a>
+            <h2>Blood Bank Locator</h2>
+        </header>
+
+        <main>
+            <div class="top-controls">
+                <div class="page-search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search by name, city, district, or state...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" id="filter-all">All Results</button>
+                    <button class="filter-btn" id="filter-nearby">Sort by Nearby</button>
+                </div>
+            </div>
+
+            <div class="split-layout">
+                <div class="left-panel" id="list-container">
+                    <div class="loader-container" id="loader">
+                        <div class="loader"></div>
+                        <p>Loading...</p>
+                    </div>
+                </div>
+                <div class="right-panel" id="details-container">
+                    <div class="placeholder">
+                        <i class="fas fa-hand-pointer"></i>
+                        <h3>Select a Blood Bank</h3>
+                        <p>Choose a blood bank from the list on the left to see its full details.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/blood_banks.js') }}"></script>
+</body>
+</html>

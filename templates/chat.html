@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ recipient.full_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            {% if session.get('doctor_id') %}
+                <a href="{{ url_for('doctors.dashboard') }}" class="back-to-dash"><i class="fas fa-arrow-left"></i></a>
+            {% else %}
+                <a href="{{ url_for('main.home') }}" class="back-to-dash"><i class="fas fa-arrow-left"></i></a>
+            {% endif %}
+            
+            <div class="header-info">
+                <h3>Chat with {{ 'Dr. ' if recipient.specialization else '' }}{{ recipient.full_name }}</h3>
+                <p>{{ recipient.specialization or 'User' }}</p>
+            </div>
+        </header>
+
+        <main class="chat-messages" id="chat-messages">
+            </main>
+
+        <footer class="chat-input-area">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </footer>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        // --- FIX: The incorrect 'callId' line has been removed from here ---
+
+        // Pass server-side variables to JavaScript correctly
+        const conversationId = {{ conversation_id|tojson }};
+        const currentUserId = {{ session.get('user_id')|tojson }};
+        const currentDoctorId = {{ session.get('doctor_id')|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

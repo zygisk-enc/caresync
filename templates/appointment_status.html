@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Status - CareSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/appointment_status.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="status-page-container">
+        <header class="status-header">
+            <a href="{{ url_for('main.home') }}" class="back-button"><i class="fas fa-arrow-left"></i> Back </a>
+            <h1>Your Appointments</h1>
+        </header>
+
+        <!-- Flash messages for success/error on actions -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main class="status-list">
+            {% if appointments %}
+                {% for appointment, doctor in appointments %}
+                    <div class="status-card" id="appt-card-{{ appointment.id }}">
+                        <div class="doctor-info">
+                            <i class="fas fa-user-md"></i>
+                            <div class="doctor-details">
+                                <span class="doctor-name">Dr. {{ doctor.full_name }}</span>
+                                <span class="doctor-spec">{{ doctor.specialization }}</span>
+                            </div>
+                        </div>
+                        <div class="appointment-time">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>{{ appointment.appointment_datetime.strftime('%A, %B %d, %Y') }}</span>
+                        </div>
+                        <div class="appointment-time">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ appointment.appointment_datetime.strftime('%I:%M %p') }}</span>
+                        </div>
+                        <div class="appointment-status">
+                            <span class="status-tag status-{{ appointment.status | lower }}">{{ appointment.status }}</span>
+                        </div>
+                        <div class="appointment-actions">
+                            {% if appointment.status in ['Pending', 'Confirmed'] %}
+                                <!-- START: Updated Cancel Button with data attribute -->
+                                <button type="button" class="btn-cancel" data-appointment-id="{{ appointment.id }}">withdraw</button>
+                                <!-- END: Updated Cancel Button -->
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-appointments">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>You haven't booked any appointments yet.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- START: JavaScript for Timed Cancellation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cancelButtons = document.querySelectorAll('.btn-cancel');
+            const timeouts = new Map();
+
+            cancelButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const appointmentId = button.dataset.appointmentId;
+
+                    if (timeouts.has(appointmentId)) {
+                        // --- UNDO ---
+                        clearTimeout(timeouts.get(appointmentId));
+                        timeouts.delete(appointmentId);
+                        
+                        // Revert button appearance
+                        button.classList.remove('undo');
+                        button.textContent = 'withdraw';
+                    } else {
+                        // --- START CANCEL ---
+                        button.classList.add('undo');
+                        button.textContent = 'Undo';
+
+                        const timerId = setTimeout(() => {
+                            // Timer finished, proceed with cancellation
+                            fetch(`/appointment/cancel/${appointmentId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Dynamically update the UI without a page reload
+                                    const card = document.getElementById(`appt-card-${appointmentId}`);
+                                    if (card) {
+                                        const statusTag = card.querySelector('.status-tag');
+                                        const actionDiv = card.querySelector('.appointment-actions');
+                                        
+                                        statusTag.textContent = 'Cancelled';
+                                        statusTag.className = 'status-tag status-cancelled';
+                                        actionDiv.innerHTML = ''; // Remove the button
+                                    }
+                                } else {
+                                    alert('Failed to cancel appointment. Please try again.');
+                                    button.classList.remove('undo');
+                                    button.textContent = 'withdraw';
+                                }
+                            })
+                            .catch(() => {
+                                alert('An error occurred. Please try again.');
+                                button.classList.remove('undo');
+                                button.textContent = 'withdraw';
+                            });
+
+                            timeouts.delete(appointmentId);
+                        }, 10000); // 10 seconds
+
+                        timeouts.set(appointmentId, timerId);
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- END: JavaScript for Timed Cancellation -->
+</body>
+</html>
+

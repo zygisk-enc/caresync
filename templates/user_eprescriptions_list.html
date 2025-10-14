@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My E-Prescriptions - CareSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prescription.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reminders.css') }}">
+</head>
+<body>
+    <div class="prescription-container">
+        
+        <header class="page-header">
+            <h1>My E-Prescriptions</h1>
+            <a href="{{ url_for('main.home') }}" class="back-link">Back to Dashboard</a>
+        </header>
+
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 2rem;">
+            Here is a history of all prescriptions you have received.
+        </p>
+
+        <div class="item-list">
+        {% for prescription, doctor in prescriptions %}
+            <a href="{{ url_for('prescription.view_prescription', prescription_id=prescription.id) }}" class="item-card">
+                <div class="info-group">
+                    <i class="fas fa-user-md"></i>
+                    <strong>Dr. {{ doctor.full_name }}</strong>
+                </div>
+                <div class="info-group">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Prescribed on: {{ prescription.date_prescribed.strftime('%B %d, %Y') }}</span>
+                </div>
+                <span class="action-btn">View Details</span>
+            </a>
+        {% else %}
+            <p class="no-items">You have not received any prescriptions yet.</p>
+        {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

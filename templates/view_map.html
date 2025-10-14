@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Location</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Light theme styles */
+        :root { color-scheme: light; }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff; /* Light background */
+            color: #222222;     /* Dark text */
+        }
+    </style>
+</head>
+<body>
+    <div
+        id="map"
+        role="application"
+        aria-label="Clinic Location Map"
+        data-lat="{{ lat }}"
+        data-lng="{{ lng }}"
+    ></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mapEl = document.getElementById('map');
+            const lat = parseFloat(mapEl.dataset.lat);
+            const lng = parseFloat(mapEl.dataset.lng);
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                const map = L.map('map').setView([lat, lng], 16);
+
+                // --- CHANGE: Switched to a light theme tile provider (OpenStreetMap) ---
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([lat, lng]).addTo(map);
+            } else {
+                mapEl.innerHTML = 'Invalid location data.';
+            }
+        });
+    </script>
+</body>
+</html>
+

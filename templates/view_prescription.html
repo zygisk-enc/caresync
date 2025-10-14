@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Prescription - CareSync</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prescription.css') }}">
+</head>
+<body>
+    <div class="prescription-container">
+        <header class="page-header">
+            <h1>Prescription Details</h1>
+            <a href="javascript:history.back()" class="back-link">Go Back</a>
+        </header>
+        <div class="prescription-details">
+            <div class="prescription-header">
+                <p><strong>Patient:</strong> {{ user.full_name }}</p>
+                <p><strong>Prescribed by:</strong> Dr. {{ doctor.full_name }} ({{ doctor.specialization }})</p>
+                <p><strong>Date:</strong> {{ prescription.date_prescribed.strftime('%B %d, %Y') }}</p>
+            </div>
+            
+            <h2>Medications</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Medication</th>
+                            <th>Dosage</th>
+                            <th>Frequency</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for med in prescription.medications %}
+                        <tr>
+                            <td data-label="Medication">{{ med.name }}</td>
+                            <td data-label="Dosage">{{ med.dosage or 'N/A' }}</td>
+                            <td data-label="Frequency">{{ med.frequency or 'N/A' }}</td>
+                            <td data-label="Duration">{{ med.duration or 'N/A' }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if prescription.notes %}
+            <h2>Doctor's Notes</h2>
+            <p>{{ prescription.notes }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

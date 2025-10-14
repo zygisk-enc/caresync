@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MedBot</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <div id="starfield-container"></div>
+
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="MedBot Logo">
+                <h2>Welcome Back</h2>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash-message {{ category }}">
+                    <p>{{ message }}</p>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form id="login-form" method="POST" action="{{ url_for('auth.login') }}">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="register-link">
+                 <p>Not a user? <a href="{{ url_for('auth.register_options') }}">Register now</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const starfield = document.getElementById('starfield-container');
+            if (starfield) {
+                let stars = [];
+                function generateStars() {
+                    const starCount = 200;
+                    for (let i = 0; i < starCount; i++) {
+                        const star = document.createElement('div');
+                        const size = Math.floor(Math.random() * 3) + 1;
+                        star.classList.add('star', `s${size}`);
+                        star.style.top = `${Math.random() * 100}%`;
+                        star.style.left = `${Math.random() * 100}%`;
+                        star.style.animationDelay = `${Math.random() * 3}s`;
+                        star.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                        star.dataset.parallaxRate = size; 
+                        starfield.appendChild(star);
+                        stars.push(star); 
+                    }
+                }
+                function handleMouseMove(e) {
+                    const { clientX, clientY } = e;
+                    const xRatio = (clientX - window.innerWidth / 2) / window.innerWidth;
+                    const yRatio = (clientY - window.innerHeight / 2) / window.innerHeight;
+                    stars.forEach(star => {
+                        const parallaxRate = star.dataset.parallaxRate;
+                        const x = xRatio * 40 * parallaxRate;
+                        const y = yRatio * 40 * parallaxRate;
+                        star.style.transform = `translate(${x}px, ${y}px)`;
+                    });
+                }
+                 function handleMouseLeave() {
+                    stars.forEach(star => {
+                        star.style.transform = `translate(0, 0)`;
+                    });
+                }
+                generateStars();
+                document.body.addEventListener('mousemove', handleMouseMove);
+                document.body.addEventListener('mouseleave', handleMouseLeave);
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+</body>
+</html>

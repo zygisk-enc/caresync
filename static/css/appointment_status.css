@@ -1,0 +1,248 @@
+/* static/css/appointment_status.css */
+:root {
+    --font-family: 'Inter', sans-serif;
+    --background-dark: #121212;
+    --surface-1: #1E1E1E;
+    --primary-accent: #F7971E;
+    --text-main: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --border-color: #383838;
+    --status-pending: #ffc107;
+    --status-confirmed: #28a745;
+    --status-rejected: #dc3545;
+    --status-cancelled: #6c757d; /* Grey for cancelled */
+}
+
+body {
+    background-color: var(--background-dark);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    margin: 0;
+}
+
+.status-page-container {
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.status-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.back-button {
+    background-color: var(--surface-1);
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+    width: 70px;
+}
+
+.back-button:hover {
+    background-color: #333;
+    color: var(--text-main);
+}
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- START: Updated Grid Layout for Cancel Button --- */
+.status-card {
+    background-color: var(--surface-1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 1fr 1fr; /* Added column for actions */
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid var(--border-color);
+}
+/* --- END: Updated Grid Layout --- */
+
+.doctor-info, .appointment-time {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.doctor-info i, .appointment-time i {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.doctor-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.doctor-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.doctor-spec {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.appointment-status, .appointment-actions {
+    text-align: right;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #121212;
+}
+
+.status-pending { background-color: var(--status-pending); }
+.status-confirmed { background-color: var(--status-confirmed); }
+.status-rejected { background-color: var(--status-rejected); }
+.status-cancelled { background-color: var(--status-cancelled); color: var(--text-main); }
+
+
+/* --- START: Cancel Button Styling with Timer --- */
+.btn-cancel {
+    background-color: var(--status-rejected);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cancel:hover {
+    opacity: 0.85;
+}
+
+.btn-cancel.undo {
+    background-color: #495057; /* A neutral grey for the undo state */
+}
+
+/* This pseudo-element acts as the progress bar */
+.btn-cancel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%; /* Starts with no width */
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: width 10s linear; /* The 10-second timer animation */
+}
+
+.btn-cancel.undo::before {
+    width: 100%; /* Animate to full width when 'undo' class is added */
+}
+/* --- END: Cancel Button Styling --- */
+
+.no-appointments {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 4rem 2rem;
+    background-color: var(--surface-1);
+    border-radius: 12px;
+    border: 1px dashed var(--border-color);
+}
+
+.no-appointments i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Flash Messages */
+.flash-messages { margin-bottom: 1.5rem; }
+.flash { padding: 1rem; border-radius: 8px; font-weight: 500; }
+.flash-success { background-color: #28a745; color: white; }
+.flash-error { background-color: #dc3545; color: white; }
+
+/* --- START: RESPONSIVE FIXES FOR MOBILE --- */
+
+@media (max-width: 768px) {
+    .status-page-container {
+        padding: 0 1.5rem;
+    }
+
+    .status-card {
+        grid-template-columns: 1fr auto; /* Use two columns: Info | Actions */
+        row-gap: 0.75rem;
+    }
+    
+    .doctor-info {
+        grid-column: 1 / -1; /* Doctor info spans the full width on its own row */
+    }
+
+    .appointment-time {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+    }
+    
+    .appointment-status {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+        justify-self: start;
+    }
+    
+    .appointment-actions {
+        grid-column: 2 / 3;
+        grid-row: 2 / 4; /* Center the button vertically next to the time/status */
+        align-self: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .status-page-container {
+        padding: 0 1rem;
+    }
+    
+    .status-card {
+        grid-template-columns: 1fr; /* Stack everything into a single column */
+        gap: 1.25rem;
+    }
+    
+    /* Reset all grid items to stack vertically */
+    .doctor-info,
+    .appointment-time,
+    .appointment-status,
+    .appointment-actions {
+        grid-column: auto;
+        grid-row: auto;
+        justify-self: start;
+    }
+
+    .appointment-actions {
+        width: 100%;
+    }
+    .btn-cancel {
+        width: 100%; /* Make the cancel button full-width */
+    }
+}
+
+/* --- END: RESPONSIVE FIXES FOR MOBILE --- */

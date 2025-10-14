@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directions to Clinic</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            overflow: hidden;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            background-color: #1a1a1a;
+        }
+        #status-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(18, 18, 18, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1001;
+        }
+        .status-box {
+            padding: 2rem;
+            background: #1e1e1e;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .loader {
+            border: 4px solid #444;
+            border-top: 4px solid #F7971E;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .leaflet-control-attribution {
+            background: rgba(0,0,0,0.7) !important;
+            color: #bbb !important;
+        }
+        .user-location-icon {
+            border: 3px solid #F7971E;
+            border-radius: 50%;
+            background-color: rgba(247, 151, 30, 0.8);
+            box-shadow: 0 0 0 rgba(247, 151, 30, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(247, 151, 30, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(247, 151, 30, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(247, 151, 30, 0); }
+        }
+
+        /* Map Controls Styling */
+        .map-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .map-control-btn {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(30, 30, 30, 0.9);
+            color: #e0e0e0;
+            border: 1px solid #444;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .map-control-btn:hover {
+            background-color: #333;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="map"></div>
+    
+    <div class="map-controls">
+        <button id="recenter-btn" class="map-control-btn" title="Re-center"><i class="fas fa-crosshairs"></i></button>
+    </div>
+    
+    <div id="status-overlay">
+        <div class="status-box">
+            <div id="loader" class="loader"></div>
+            <p id="status-message">Getting your location and calculating route...</p>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusOverlay = document.getElementById('status-overlay');
+            const statusMessage = document.getElementById('status-message');
+            const loader = document.getElementById('loader');
+            const recenterBtn = document.getElementById('recenter-btn');
+
+            const destLat = parseFloat("{{ dest_lat }}");
+            const destLng = parseFloat("{{ dest_lng }}");
+            
+            let map, userMarker, routingControl, locationWatcherId;
+
+            if (isNaN(destLat) || isNaN(destLng)) {
+                statusMessage.textContent = "Error: Invalid clinic location provided.";
+                loader.style.display = 'none';
+                return;
+            }
+            if (!navigator.geolocation) {
+                statusMessage.textContent = "Geolocation is not supported by your browser.";
+                loader.style.display = 'none';
+                return;
+            }
+
+            function initializeMap(origin) {
+                statusOverlay.style.display = 'none';
+                map = L.map('map', { zoomControl: false }).setView([origin.lat, origin.lng], 16);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                const userIcon = L.divIcon({ className: 'user-location-icon', iconSize: [12, 12] });
+                userMarker = L.marker([origin.lat, origin.lng], { icon: userIcon }).addTo(map).bindPopup("Your Location").openPopup();
+
+                routingControl = L.Routing.control({
+                    waypoints: [ L.latLng(origin.lat, origin.lng), L.latLng(destLat, destLng) ],
+                    routeWhileDragging: false, show: false,
+                    createMarker: (i, wp, n) => (i === n - 1) ? L.marker(wp.latLng, { title: 'Clinic Location' }) : null,
+                    lineOptions: { styles: [{color: '#F7971E', opacity: 0.8, weight: 6}] }
+                }).addTo(map);
+            }
+
+            function updatePosition(position) {
+                const newLatLng = { lat: position.coords.latitude, lng: position.coords.longitude };
+                if (!map) {
+                    initializeMap(newLatLng);
+                } else {
+                    const leafletLatLng = L.latLng(newLatLng.lat, newLatLng.lng);
+                    userMarker.setLatLng(leafletLatLng);
+                    
+                    // Only pan if the user isn't actively interacting with the map
+                    if (document.activeElement !== map.getContainer()) {
+                        map.panTo(leafletLatLng);
+                    }
+                    
+                    const waypoints = routingControl.getWaypoints();
+                    waypoints[0].latLng = leafletLatLng;
+                    routingControl.setWaypoints(waypoints);
+                }
+            }
+            
+            function handleLocationError(error) {
+                loader.style.display = 'none';
+                statusMessage.textContent = "Could not get your location. Please enable location services.";
+            }
+            
+            // Re-center button logic
+            recenterBtn.addEventListener('click', () => {
+                if (userMarker) {
+                    map.setView(userMarker.getLatLng(), 16, { animate: true, pan: { duration: 1 } });
+                }
+            });
+
+            const locateOptions = { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 };
+            locationWatcherId = navigator.geolocation.watchPosition(updatePosition, handleLocationError, locateOptions);
+
+            window.addEventListener('beforeunload', () => {
+                if (locationWatcherId) {
+                    navigator.geolocation.clearWatch(locationWatcherId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

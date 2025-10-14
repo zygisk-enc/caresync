@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CareSync</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_redesign.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="admin-header">
+            <h1>CareSync Verification</h1>
+            <a href="{{ url_for('admin.logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </header>
+
+        <main class="dashboard-layout">
+            {% if doctors %}
+                <!-- Left Panel: Navigation -->
+                <aside class="left-panel-nav">
+                    <div class="nav-header">
+                        <h2>Pending Applications ({{ doctors|length }})</h2>
+                    </div>
+                    <ul class="doctor-nav-list">
+                        {% for doc in doctors %}
+                        <li class="doctor-nav-item" data-doctor-id="{{ doc.id }}">
+                            <img src="{{ url_for('static', filename='uploads/' + doc.photo_filename) if doc.photo_filename else url_for('static', filename='assets/default-profile.png') }}" alt="Photo of {{ doc.full_name }}">
+                            <div class="nav-item-info">
+                                <h4>{{ doc.full_name }}</h4>
+                                <p>{{ doc.specialization }}</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+
+                <!-- Right Panel: Details -->
+                <section class="right-panel-details">
+                    {% for doctor in doctors %}
+                    <div class="doctor-details-content" id="doctor-details-{{ doctor.id }}" style="display: none;">
+                        <div class="details-header">
+                            <div class="details-title">
+                                <h2>{{ doctor.full_name }}</h2>
+                                <span class="status-badge">Pending Review</span>
+                            </div>
+                            <div class="card-actions">
+                                <form action="{{ url_for('admin.approve_doctor', doctor_id=doctor.id) }}" method="POST">
+                                    <button type="submit" class="btn-approve"><i class="fas fa-check"></i> Approve</button>
+                                </form>
+                                <form action="{{ url_for('admin.reject_doctor', doctor_id=doctor.id) }}" method="POST">
+                                    <button type="submit" class="btn-reject"><i class="fas fa-times"></i> Reject</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Info Sections -->
+                        <div class="details-section">
+                            <h4>Personal Information</h4>
+                            <div class="info-grid">
+                                <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ doctor.email }}</p>
+                                <p><strong><i class="fas fa-phone"></i> Phone:</strong> {{ doctor.phone }}</p>
+                                <p><strong><i class="fas fa-birthday-cake"></i> DOB:</strong> {{ doctor.dob.strftime('%B %d, %Y') if doctor.dob else 'N/A' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="details-section">
+                            <h4>Credentials</h4>
+                            <div class="info-grid">
+                                <p><strong><i class="fas fa-id-card-alt"></i> License #:</strong> {{ doctor.license_number }}</p>
+                                <p><strong><i class="fas fa-award"></i> Experience:</strong> {{ doctor.experience_years }} years</p>
+                                <p class="full-width"><strong><i class="fas fa-graduation-cap"></i> Qualifications:</strong> {{ doctor.qualifications }}</p>
+                            </div>
+                        </div>
+
+                        <div class="details-section">
+                            <h4>Clinic Details</h4>
+                            <div class="info-grid">
+                                <p><strong><i class="fas fa-hospital"></i> Clinic Name:</strong> {{ doctor.clinic_name }}</p>
+                                <p>
+                                    <strong><i class="fas fa-location-arrow"></i> Location:</strong>
+                                    <span class="coords-text">{{ doctor.clinic_latitude }}, {{ doctor.clinic_longitude }}</span>
+                                    <button class="view-map-btn" data-lat="{{ doctor.clinic_latitude }}" data-lng="{{ doctor.clinic_longitude }}">View on Map</button>
+                                </p>
+                                <p class="full-width"><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ doctor.clinic_address }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="details-section">
+                            <h4>Uploaded Documents</h4>
+                            <div class="document-links">
+                                <a href="{{ url_for('static', filename='uploads/' + doctor.license_filename) }}" target="_blank"><i class="fas fa-file-medical"></i> View License</a>
+                                <a href="{{ url_for('static', filename='uploads/' + doctor.id_filename) }}" target="_blank"><i class="fas fa-id-card"></i> View ID</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+            {% else %}
+                <div class="no-requests-message">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>All Clear!</h2>
+                    <p>There are no pending doctor verification requests at this time.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- Map Modal (no changes needed here) -->
+    <div id="map-modal-backdrop" class="modal-backdrop hidden">
+        <div class="modal-box map-modal-box">
+            <button id="close-map-modal-btn" class="close-modal-btn">&times;</button>
+            <h3>Clinic Location Verification</h3>
+            <iframe id="map-iframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
+

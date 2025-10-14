@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Prescription - CareSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prescription.css') }}">
+</head>
+<body>
+    <div class="prescription-container">
+        <header class="page-header">
+            <h1>Write Prescription for {{ user.full_name }}</h1>
+            <a href="{{ url_for('prescription.doctor_dashboard') }}" class="back-link">Cancel</a>
+        </header>
+        <p style="color: var(--text-secondary);">Consultation Date: {{ call.scheduled_time.strftime('%B %d, %Y') }}</p>
+
+        <form method="POST" class="prescription-form">
+            <div id="medications-container">
+                <div class="medication-row">
+                    <input type="text" name="med_name[]" placeholder="Medication Name" required>
+                    <input type="text" name="med_dosage[]" placeholder="Dosage (e.g., 500mg)">
+                    <input type="text" name="med_frequency[]" placeholder="Frequency (e.g., Twice a day)">
+                    <input type="text" name="med_duration[]" placeholder="Duration (e.g., 7 days)">
+                    </div>
+            </div>
+            <button type="button" id="add-med-btn" class="add-med-btn">
+                <i class="fas fa-plus"></i> Add Another Medication
+            </button>
+            <hr style="border-color: var(--border-color); margin: 1.5rem 0;">
+            <label for="notes" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Additional Notes:</label>
+            <textarea name="notes" id="notes" rows="4" placeholder="Enter any additional instructions for the patient..."></textarea>
+            
+            <button type="submit" class="submit-btn">Create Prescription</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('add-med-btn').addEventListener('click', () => {
+            const container = document.getElementById('medications-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'medication-row';
+            newRow.innerHTML = `
+                <input type="text" name="med_name[]" placeholder="Medication Name" required>
+                <input type="text" name="med_dosage[]" placeholder="Dosage">
+                <input type="text" name="med_frequency[]" placeholder="Frequency">
+                <input type="text" name="med_duration[]" placeholder="Duration">
+                <button type="button" class="remove-med-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(newRow);
+        });
+
+        // Use event delegation for dynamically added remove buttons
+        document.getElementById('medications-container').addEventListener('click', (e) => {
+            // Find the remove button that was clicked
+            const removeBtn = e.target.closest('.remove-med-btn');
+            if (removeBtn) {
+                // Remove its parent, the .medication-row
+                removeBtn.parentElement.remove();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CareSync</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dontchangethis.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/switch.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <meta name="theme-color" content="#1E1E1E"/>
+    <link rel="manifest" href="{{ url_for('main.serve_manifest') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/icons/logo.png') }}">
+</head>
+<body>
+    <div id="starfield-container"></div>
+    <div id="splash-screen">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Medibot Logo">
+        </div>
+    </div>
+    <div id="app-wrapper" class="hidden">
+        <header>
+            <div class="header-left">
+                <a href="{{ url_for('doctors.dashboard') if session['doctor_id'] else url_for('main.home') }}" id="logo-link">
+                    <h1 class="header-logo">CareSync</h1>
+                </a>
+                </div>
+            <div class="header-right">
+                <button id="starfield-toggle" role="switch" aria-checked="true" aria-label="Toggle background" class="cs-switch"></button>
+
+                <div class="settings-menu-container">
+                    <a href="#" id="settings-btn"><i class="fas fa-cog"></i></a>
+                    <div id="settings-dropdown" class="settings-dropdown">
+                        {% if session['doctor_id'] %}
+                            <a href="{{ url_for('doctors.doctor_account') }}">Account</a>
+                        {% else %}
+                            <a href="{{ url_for('auth.account') }}">Account</a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.logout') }}">Logout</a>
+                    </div>
+                </div>
+                
+                <div class="notification-container">
+                    <a href="#" id="notification-bell-btn">
+                        <i class="fas fa-bell"></i>
+                        <span id="notification-count" class="hidden"></span>
+                    </a>
+                    <div id="notification-dropdown" class="notification-dropdown hidden">
+                        <div class="notification-item">No new notifications.</div>
+                    </div>
+                </div>
+                {% if not (session['user_id'] or session['doctor_id']) %}
+                <a href="{{ url_for('auth.login') }}" class="user-profile">R</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main>
+            <div class="main-content">
+                <section class="welcome-section">
+                    <h2 class="gradient-text">Hello, {{ session.user_name }}</h2>
+                    {% if session['doctor_id'] %}
+                        <h1>How can CareSync assist your practice today?</h1>
+                    {% else %}
+                        <h1>How are you feeling today?</h1>
+                    {% endif %}
+                </section>
+
+                <section id="chat-display-area" class="chat-display-area"></section>
+                
+                <section class="ai-prompt-section">
+                    <div class="prompt-wrapper">
+                        <div class="prompt-container">
+                            
+                            <div id="selected-image-preview-container"></div>
+                            <input type="file" id="image-upload-input" multiple accept="image/*" style="display: none;">
+                            <textarea id="ai-input" placeholder="Ask MediBot anything, or upload an image..." rows="1"></textarea>
+                            <div class="bottom-icons">
+                                <i class="fas fa-paperclip" id="attach-btn" title="Attach Images"></i>
+                                
+                                <i class="fas fa-microphone"></i>
+                                <button id="send-prompt-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="quick-actions-section">
+                    {% if session['doctor_id'] %}
+                        <a href="{{ url_for('doctors.view_appointments') }}" class="quick-action-btn">
+                            <i class="fas fa-calendar-check"></i> <span>Manage Appointments</span>
+                        </a>
+                        <a href="{{ url_for('video_call.view_call_requests') }}" class="quick-action-btn">
+                            <i class="fas fa-video"></i> <span>Manage Calls</span>
+                        </a>
+                        <a href="{{ url_for('blood_bank.list_page') }}" class="quick-action-btn">
+                            <i class="fas fa-tint"></i> <span>Blood Banks</span>
+                        </a>
+                        <a href="{{ url_for('prescription.doctor_dashboard') }}" class="quick-action-btn">
+                            <i class="fas fa-file-prescription"></i> <span>E-Prescriptions</span>
+                        </a>
+                        <a href="{{ url_for('messaging.list_chats') }}" class="quick-action-btn">
+                            <i class="fas fa-comment-dots"></i> <span>Messages</span>
+                        </a>
+
+                    {% else %} <a href="{{ url_for('doctors.find_doctors') }}" class="quick-action-btn">
+                            <i class="fas fa-user-md"></i> <span>Find Doctors</span>
+                        </a>
+                        <a href="{{ url_for('main.appointment_status') }}" class="quick-action-btn">
+                            <i class="fas fa-calendar-alt"></i> <span>My appointment</span>
+                        </a>
+                        <a href="{{ url_for('video_call.user_call_status') }}" class="quick-action-btn">
+                            <i class="fas fa-phone-alt"></i> <span>My call request</span>
+                        </a>
+                        <a href="{{ url_for('blood_bank.list_page') }}" class="quick-action-btn">
+                            <i class="fas fa-tint"></i> <span>Blood Banks</span>
+                        </a>
+
+                        <a href="{{ url_for('prescription.user_eprescriptions_view_only') }}" class="quick-action-btn">
+                            <i class="fas fa-file-medical"></i>
+                            <span>E-Prescriptions</span>
+                        </a>
+                        <a href="{{ url_for('prescription.user_prescriptions') }}" class="quick-action-btn">
+                            <i class="fas fa-bell"></i>
+                            <span>Medication Reminders</span>
+                        </a>
+                        {% endif %}
+                </section>
+                </div>
+        </main>
+        
+        <footer>
+            <a href="#">About XIGmed</a>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </footer>
+    </div>
+    
+    <div id="disclaimer-backdrop" class="hidden">
+        <div id="disclaimer-box">
+            <h2>Disclaimer</h2>
+            <p>This web application has been developed strictly for academic/project purposes only.</p>
+            <p>The responses generated by this system are not medical advice and should not be relied upon for diagnosis, treatment, or any healthcare decision. Always consult a qualified medical professional or doctor for any health-related concerns.</p>
+            <p>The creators of this project are not responsible for any misuse, misunderstanding, or reliance on the information provided by this webapp.</p>
+            
+            <div class="disclaimer-options">
+                <div class="disclaimer-confirm">
+                    <input type="checkbox" id="disclaimer-checkbox">
+                    <label for="disclaimer-checkbox">I have read the disclaimer</label>
+                </div>
+                <div class="disclaimer-confirm">
+                    <input type="checkbox" id="dont-ask-again-checkbox">
+                    <label for="dont-ask-again-checkbox">Don't ask again</label>
+                </div>
+            </div>
+
+            <div class="disclaimer-buttons">
+                <button id="disagree-btn">Disagree</button>
+                <button id="agree-btn" disabled>Agree</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="call-notification-backdrop" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3>Incoming Call</h3>
+            <p>You have an incoming call from <strong id="caller-name-placeholder">Patient</strong>.</p>
+            <div class="modal-actions">
+                <button id="decline-call-btn" class="action-btn home">Decline</button>
+                <button id="accept-call-btn" class="action-btn book">Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/settings-in-index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    
+    {% if session['doctor_id'] %}
+        <script src="{{ url_for('static', filename='js/call-listener.js') }}"></script>
+    {% endif %}
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register("{{ url_for('main.serve_sw') }}").then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    </body>
+</html>

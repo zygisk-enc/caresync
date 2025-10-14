@@ -1,0 +1,297 @@
+/* =================================================================== */
+/* A. DESIGN SYSTEM & FONT IMPORT */
+/* =================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-family: 'Inter', sans-serif;
+    --background-dark: #121212;
+    --surface-1: #1E1E1E;
+    --surface-2: #2a2a2a;
+    --primary-accent: #F7971E;
+    --text-main: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --border-color: #383838;
+    --action-blue: #007bff; /* Consistent blue for actions */
+}
+
+/* =================================================================== */
+/* B. CORE & PAGE LAYOUT */
+/* =================================================================== */
+body {
+    background-color: var(--background-dark);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    margin: 0;
+}
+
+#app-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.main-header {
+    text-align: left; /* FIX: Align header to the left */
+    margin-bottom: 2rem;
+}
+.main-header #logo-link {
+    text-decoration: none;
+}
+.main-header .header-logo {
+    color: var(--text-main);
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+.main-header h2 {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* =================================================================== */
+/* C. TOP CONTROLS (SEARCH & FILTERS) */
+/* =================================================================== */
+.top-controls {
+    margin-bottom: 2rem;
+}
+
+.page-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+}
+.page-search-bar input {
+    width: 100%;
+    height: 50px;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-main);
+    font-size: 1rem;
+}
+.page-search-bar i {
+    color: var(--text-secondary);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+}
+.filter-btn {
+    padding: 0.6rem 1.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-1);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.filter-btn:hover {
+    background-color: var(--surface-2);
+}
+.filter-btn.active {
+    background-color: var(--primary-accent);
+    color: var(--background-dark);
+    border-color: var(--primary-accent);
+}
+
+/* =================================================================== */
+/* D. SPLIT LAYOUT */
+/* =================================================================== */
+.split-layout {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+.left-panel {
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-right: 10px;
+}
+.right-panel {
+    background-color: var(--surface-1);
+    border-radius: 12px;
+    padding: 2rem;
+    position: sticky;
+    top: 2rem;
+}
+
+/* =================================================================== */
+/* E. LIST & DETAIL COMPONENTS */
+/* =================================================================== */
+.list-item {
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.list-item:hover {
+    background-color: var(--surface-2);
+}
+.list-item.active {
+    border-color: var(--primary-accent);
+    background-color: var(--surface-2);
+}
+.list-item-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+}
+.list-item-info p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+.distance {
+    background-color: var(--primary-accent);
+    color: var(--background-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 99px; /* Pill shape */
+    white-space: nowrap;
+}
+
+.details-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+.details-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+.details-header p {
+    margin: 4px 0 0;
+    color: var(--primary-accent);
+    font-weight: 500;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+.detail-item strong {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+.detail-item span {
+    line-height: 1.5;
+}
+.not-available {
+    color: #666;
+    font-style: italic;
+}
+
+.details-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+.direction-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--action-blue);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+.direction-btn:hover {
+    opacity: 0.85;
+}
+
+.placeholder {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+}
+.placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.loader-container {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    color: var(--text-secondary);
+}
+.loader {
+    border-top-color: var(--primary-accent);
+    margin: 0 auto 1rem;
+}
+
+.left-panel::-webkit-scrollbar {
+    width: 8px;
+}
+.left-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.left-panel::-webkit-scrollbar-thumb {
+    background-color: #2a2a2a;
+    border-radius: 4px;
+}
+
+/* =================================================================== */
+/* F. RESPONSIVE DESIGN FIXES */
+/* =================================================================== */
+@media (max-width: 992px) {
+    .split-layout {
+        grid-template-columns: 1fr; /* Stack panels vertically */
+    }
+    .left-panel {
+        max-height: 50vh; /* Give list a scrollable area */
+    }
+    .right-panel {
+        position: static; /* Remove sticky behavior */
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #app-wrapper {
+        padding: 1.5rem 1rem;
+    }
+    .details-grid {
+        grid-template-columns: 1fr; /* Single column for details */
+    }
+    .filter-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-btn {
+        text-align: center;
+    }
+}

@@ -1,0 +1,51 @@
+
+body.starfield-off #starfield-container { display: none !important; } 
+
+body.starfield-off { background-color: #121212 !important; } 
+
+#starfield-toggle:hover { color: #F7971E; } 
+
+
+/* Remove underline for any header links just in case */
+header .header-right a { text-decoration: none; } /* [web:69][web:77] */
+
+/* Android-like switch styles for the starfield toggle */
+.cs-switch {
+  --w: 35px; --h: 20px; --pad: 2px;
+  appearance: none;
+  border: none;
+  width: var(--w);
+  height: var(--h);
+  border-radius: var(--h);
+  position: relative;
+  background: #444;
+  cursor: pointer;
+  outline: none;
+  transition: background .2s ease;
+  display: inline-block;
+  vertical-align: middle;
+}
+.cs-switch::after {
+  content: "";
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
+  width: calc(var(--h) - 2*var(--pad));
+  height: calc(var(--h) - 2*var(--pad));
+  border-radius: 50%;
+  background: #E0E0E0;
+  box-shadow: 0 1px 2px rgba(0,0,0,.35);
+  transition: transform .2s ease, background .2s ease;
+}
+.cs-switch[aria-checked="true"] {
+  background: #F7971E;
+}
+.cs-switch[aria-checked="true"]::after {
+  transform: translateX(calc(var(--w) - var(--h)));
+  background: #000;
+}
+
+/* Ensure it sits nicely in header and above background */
+header .header-right { position: relative; z-index: 2; }
+#starfield-container { z-index: 0; }
+

@@ -1,0 +1,155 @@
+:root {
+    --background-dark: #121212;
+    --surface-1: #2a2a2a; /* Dark gray for buttons */
+    --accent-red: #e64554;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--background-dark);
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+.call-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-container {
+    position: relative;
+    background-color: #000;
+}
+
+#remote-video-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#remoteVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* FIX: Prevents cropping */
+}
+
+#local-video-container {
+    position: absolute;
+    bottom: 90px;
+    right: 20px;
+    width: 25%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    border: 2px solid #333;
+    overflow: hidden;
+    z-index: 10;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    transition: opacity 0.3s;
+}
+
+/* FIX: This rule was missing */
+#localVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* FIX: Prevents cropping on the small video */
+}
+
+
+#local-video-container.video-off {
+    opacity: 0;
+}
+
+.controls-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    gap: 1.5rem;
+}
+
+.control-btn {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: white;
+    background-color: var(--surface-1);
+    transition: background-color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.control-btn:not(:disabled):hover {
+    background-color: #444;
+}
+
+.control-btn.is-muted {
+    background-color: var(--accent-red);
+}
+.control-btn.is-muted:hover {
+    background-color: #c43745;
+}
+
+.hangup-btn {
+    background-color: var(--accent-red);
+}
+.hangup-btn:hover {
+    background-color: #c43745;
+}
+.control-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#status-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    z-index: 5;
+}
+#status-overlay p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #F7971E;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

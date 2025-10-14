@@ -1,0 +1,465 @@
+/* --- Final Redesigned Account Page --- */
+.account-page-layout {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    height: 80vh; /* Fixed height */
+    margin: 2rem auto;
+    background-color: rgba(20, 19, 19, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid #222;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.account-sidebar {
+    width: 280px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-right: 1px solid #222;
+    flex-shrink: 0;
+    padding: 2rem;
+}
+
+ .profile-summary {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+.account-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #F7971E;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin: 0 auto 1rem auto;
+}
+.account-avatar-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem auto;
+    border: 3px solid #333;
+}
+.profile-summary h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.2rem;
+}
+.profile-summary p {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0 0;
+    word-break: break-all;
+}
+
+.account-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #ada6a6;
+    text-decoration: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 0.5rem;
+}
+.account-nav a:hover, .account-nav a.active {
+    background-color: #1f1f1f;
+    color: #fff;
+}
+.account-nav a i {
+    width: 20px;
+    text-align: center;
+}
+
+.account-main-content {
+    flex-grow: 1;
+    padding: 2.5rem;
+    overflow-y: auto; /* Make this section scrollable */
+}
+.account-main-content h2 {
+    font-size: 1.8rem;
+    margin: 0 0 2rem 0;
+    border-bottom: 1px solid #222;
+    padding-bottom: 1rem;
+    color: #fff;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+.info-item {
+    background-color: #101010;
+    padding: 1.25rem;
+    border-radius: 12px;
+}
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+.info-item .label {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0 0 0.5rem 0;
+    display: block;
+}
+.info-item .value {
+    font-size: 1rem;
+    color: #E0E0E0;
+    margin: 0;
+}
+
+.document-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.document-card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #E0E0E0;
+    text-decoration: none;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.document-card:hover {
+    background-color: #2a2a2a;
+    border-color: #F7971E;
+}
+.document-card i {
+    font-size: 2.5rem;
+    color: #F7971E;
+    display: block;
+    margin-bottom: 1rem;
+}
+.document-card span {
+    font-weight: 500;
+}
+
+
+.account-actions {
+    margin-top: 2.5rem;
+    border-top: 1px solid #222;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.home-btn {
+    color: #B0B0B0;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.delete-btn {
+    background-color: transparent;
+    color: #a53333;
+    border: 1px solid #a53333;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: 160px;
+}
+.delete-btn:hover {
+    background-color: #4d1c1c;
+    color: #ffc4c4;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s;
+}
+.modal-box {
+    background-color: #121212;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #222;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.modal-box h3 { margin-top: 0; }
+.modal-box p { color: #B0B0B0; margin-bottom: 2rem; }
+.modal-actions { display: flex; justify-content: center; gap: 1rem; }
+
+/* --- Base Account Page Layout --- */
+.account-page-layout {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    height: 80vh; /* Fixed height */
+    margin: 5vh auto;
+    background-color: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid #222;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.account-sidebar {
+    width: 280px;
+    background-color: rgba(10, 10, 10, 0.8);
+    border-right: 1px solid #222;
+    flex-shrink: 0;
+    padding: 2rem;
+}
+
+/* ... (profile summary and nav styles remain the same) ... */
+
+.account-main-content {
+    flex-grow: 1;
+    padding: 2.5rem;
+    overflow-y: auto; /* Makes this section scrollable */
+    background-color: #0d0d0d;
+}
+
+.account-main-content h2 {
+    font-size: 1.8rem;
+    margin: 0 0 2rem 0;
+    border-bottom: 1px solid #222;
+    padding-bottom: 1rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ... (other info item styles remain the same) ... */
+
+.location-value-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-link-style {
+    background: none;
+    border: none;
+    color: #F7971E;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    padding: 0;
+}
+
+/* --- Document Grid --- */
+.document-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.document-item {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #E0E0E0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.document-item:hover {
+    border-color: #F7971E;
+    transform: translateY(-3px);
+}
+.document-item i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+    color: #F7971E;
+}
+
+/* --- Modal Styles --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-backdrop.hidden { display: none; }
+
+.modal-box {
+    background-color: #181818;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+/* Map Modal Specific Styles */
+.map-modal-box {
+    max-width: 800px; /* Increased width */
+    height: 80vh;   /* Increased height */
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.map-modal-box h3 { margin: 0 0 1rem 0; }
+.map-modal-box iframe {
+    flex-grow: 1;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+.close-modal-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid #444;
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.close-modal-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+/* --- Professional Styling for the availability button --- */
+.availability-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600; /* Slightly bolder for better readability */
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    /* Smoother transition and added shadow for depth */
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Adds a subtle lift effect on hover */
+.availability-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.availability-btn.available {
+    /* A deep, professional teal-green */
+    background-color: #1D817D;
+    color: white;
+}
+
+.availability-btn.unavailable {
+    /* A neutral, professional dark gray */
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Define hover states separately from the main hover effect for color changes */
+.availability-btn.available:hover {
+    background-color: #176865; /* Darker teal */
+}
+
+.availability-btn.unavailable:hover {
+    background-color: #5a6268; /* Darker gray */
+}
+
+/* =================================================================== */
+/* I. RESPONSIVE DESIGN FIXES (APPENDED) */
+/* =================================================================== */
+
+/* For Tablets and smaller devices */
+@media (max-width: 992px) {
+    .account-page-layout {
+        flex-direction: column; /* Stack sidebar and content vertically */
+        height: auto;
+        max-height: none;
+        margin: 2rem 1rem; /* Reduce side margins */
+    }
+
+    .account-sidebar {
+        width: 100%; /* Make sidebar full width */
+        border-right: none;
+        border-bottom: 1px solid #222; /* Add separator below sidebar */
+    }
+
+    .account-main-content {
+        overflow-y: visible; /* Remove internal scrolling */
+    }
+}
+
+/* For smaller phones */
+@media (max-width: 576px) {
+    .account-page-layout {
+        margin: 1rem; /* Further reduce margins */
+    }
+
+    .account-sidebar,
+    .account-main-content {
+        padding: 1.5rem; /* Reduce padding for more space */
+    }
+
+    .account-main-content h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Make grids single-column */
+    .info-grid,
+    .document-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stack the action buttons vertically */
+    .account-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch; /* Make buttons full width */
+    }
+
+    .delete-btn {
+        margin-left: 0; /* Remove fixed margin */
+        text-align: center;
+    }
+}
+

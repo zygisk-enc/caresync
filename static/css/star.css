@@ -1,0 +1,116 @@
+/* General Body and Starfield Background */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #000000; /* AMOLED Black */
+    color: #E0E0E0;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* =================================================================== */
+
+/* B1. Starfield Background */
+/* ------------------------------------------------------------------- */
+#starfield-container {
+    position: fixed;
+    top: -50px; left: -50px;
+    width: calc(100% + 100px);
+    height: calc(100% + 100px);
+    z-index: 0;
+    animation: drift-container 120s infinite alternate linear;
+}
+
+.star {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 50%;
+    animation: shine 2s infinite alternate;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.star.s1 { width: 2px; height: 2px; }
+.star.s2 { width: 3px; height: 3px; }
+.star.s3 { width: 4px; height: 4px; }
+
+@keyframes drift-container {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-100px, -50px); }
+}
+@keyframes shine {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes fast-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes flow-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* A2. Main Application Wrapper */
+/* ------------------------------------------------------------------- */
+#app-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1.0rem 2.0rem; /* MODIFIED: Added 1.5rem top padding */
+    transition: filter 0.3s ease-in-out, opacity 0.5s ease-in;
+    position: relative;
+    z-index: 1;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0rem 0;
+    width: 100%;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-start; /* MODIFIED: Aligns content to the top */
+    padding-top: 2vh; /* MODIFIED: Adds a small space from the top */
+}
+.header-logo {
+    font-size: 1.8rem;
+    color: #E0E0E0; /* This sets the color of "MediBot" */
+    font-weight: 500;
+    margin: 0px;
+}
+
+#logo-link {
+    text-decoration: none; /* This removes the underline from the logo link */
+}
+header .header-right a {
+    color: #B0B0B0; /* This sets the default color of the settings icon */
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+header .header-right a:hover {
+    color: #F7971E; /* This changes the icon's color to orange on hover */
+}
+
+

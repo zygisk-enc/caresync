@@ -1,0 +1,18 @@
+# Python Virtual Environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Environment variables (VERY IMPORTANT - contains secrets)
+.env
+
+# Database file (contains user data)
+medbot.db
+
+# Local SSL certificate files
+*.pem
+
+# migration cache files
+migrations/

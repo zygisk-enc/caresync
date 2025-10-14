@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Registration - MediBot</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/switch.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <div id="starfield-container"></div>
+
+  <div class="register-wrapper">
+    <div class="register-box" style="max-width: 650px;">
+      <div class="register-header">
+        <h2>Doctor Registration</h2>
+        <p>Please complete all steps for verification.</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+              <p>{{ message }}</p>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <div class="step-progress">
+        <div class="step active" data-step="1"><span>1</span><p>Account</p></div>
+        <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+        <div class="step" data-step="2"><span>2</span><p>Credentials</p></div>
+        <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+        <div class="step" data-step="3"><span>3</span><p>Practice</p></div>
+      </div>
+
+      <form id="doctor-register-form" method="POST" action="{{ url_for('auth.register_doctor') }}" enctype="multipart/form-data">
+        <div class="form-step active" data-step="1">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-email">Email Address</label>
+              <input type="email" id="doc-email" name="doc_email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="doc-phone">Contact Number</label>
+              <input type="tel" id="doc-phone" name="doc_phone" placeholder="+1 (555) 123-4567" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-password">Password</label>
+              <input type="password" id="doc-password" name="doc_password" placeholder="Create a strong password" required>
+            </div>
+            <div class="form-group">
+              <label for="doc-confirm-password">Confirm Password</label>
+              <input type="password" id="doc-confirm-password" name="doc_confirm_password" placeholder="Re-enter password" required>
+            </div>
+          </div>
+                    <div class="form-group">
+            <label for="doc_dob">Date of Birth</label>
+            <input id="doc_dob" name="doc_dob" type="date" required>
+            </div>
+
+          <div class="form-group">
+            <label for="doc-fullname">Full Name (as per medical license)</label>
+            <input type="text" id="doc-fullname" name="doc_fullname" placeholder="Dr. John Doe" required>
+          </div>
+        </div>
+
+        <div class="form-step" data-step="2">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-license">Medical License Number</label>
+              <input type="text" id="doc-license" name="doc_license" placeholder="e.g., 123456" required>
+            </div>
+            <div class="form-group">
+              <label for="doc-council">Issuing Medical Council</label>
+              <input type="text" id="doc-council" name="doc_council" placeholder="e.g., Medical Council of India" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="doc-specialization">Specialization</label>
+            <select id="doc-specialization" name="doc_specialization" required>
+              <option value="" disabled selected>Select Specialization</option>
+              <option>General Physician</option>
+              <option>Cardiology</option>
+              <option>Dermatology</option>
+              <option>Neurology</option>
+              <option>Orthopedics</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="doc-qualifications">Qualifications / Degrees</label>
+            <textarea id="doc-qualifications" name="doc_qualifications" rows="2" placeholder="e.g., MBBS, MD (Cardiology)" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-license-upload">Upload Medical License</label>
+              <input type="file" id="doc-license-upload" name="doc_license_upload" class="file-input" required>
+            </div>
+            <div class="form-group">
+              <label for="doc-id-upload">Upload Government ID</label>
+              <input type="file" id="doc-id-upload" name="doc_id_upload" class="file-input" required>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-step" data-step="3">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="doc-clinic">Clinic / Hospital Name</label>
+              <input type="text" id="doc-clinic" name="doc_clinic" placeholder="e.g., Apollo Hospital" required>
+            </div>
+            <div class="form-group">
+              <label for="doc-experience">Years of Experience</label>
+              <input type="number" id="doc-experience" name="doc_experience" placeholder="e.g., 10" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="doc-address">Clinic Address</label>
+            <textarea id="doc-address" name="doc_address" rows="3" placeholder="Enter the full clinic address" required></textarea>
+          </div>
+
+          <!-- Location picker control -->
+          <div class="form-group">
+            <label>Clinic Location</label>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <button type="button" id="open-location-picker" class="nav-btn" style="min-width:160px;">Pick on Map</button>
+              <span id="location-preview" style="color:#B0B0B0;">No location selected</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="doc-photo-upload">Profile Photo</label>
+            <input type="file" id="doc-photo-upload" name="doc_photo_upload" class="file-input" accept="image/*" required>
+          </div>
+        </div>
+
+        <!-- Hidden fields stored to DB -->
+        <input type="hidden" name="clinic_latitude" id="clinic_latitude">
+        <input type="hidden" name="clinic_longitude" id="clinic_longitude">
+
+        <div class="step-nav-buttons">
+          <button type="button" class="nav-btn prev-btn" style="display: none;">Previous</button>
+          <button type="button" class="nav-btn next-btn">Next</button>
+          <button type="submit" id="submit-doctor" class="nav-btn submit-btn" style="display: none;">Submit for Verification</button>
+        </div>
+      </form>
+
+      <div class="back-link">
+        <p>Changed your mind? <a href="{{ url_for('auth.register_options') }}">Go Back</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Starfield + multistep controls (kept as-is)
+    document.addEventListener('DOMContentLoaded', () => {
+      const starfield = document.getElementById('starfield-container'); let stars = [];
+      if (starfield) {
+        function generateStars(){ const starCount=200; for(let i=0;i<starCount;i++){ const star=document.createElement('div'); const size=Math.floor(Math.random()*3)+1; star.classList.add('star',`s${size}`); star.style.top=`${Math.random()*100}%`; star.style.left=`${Math.random()*100}%`; star.style.animationDelay=`${Math.random()*3}s`; star.style.animationDuration=`${Math.random()*2+3}s`; star.dataset.parallaxRate=size; starfield.appendChild(star); stars.push(star); } }
+        function handleMouseMove(e){ const{clientX,clientY}=e; const xRatio=(clientX-window.innerWidth/2)/window.innerWidth; const yRatio=(clientY-window.innerHeight/2)/window.innerHeight; stars.forEach(star=>{ const parallaxRate=star.dataset.parallaxRate; const x=xRatio*40*parallaxRate; const y=yRatio*40*parallaxRate; star.style.transform=`translate(${x}px, ${y}px)`; }); }
+        function handleMouseLeave(){ stars.forEach(star=>{ star.style.transform='translate(0, 0)'; }); }
+        generateStars(); document.body.addEventListener('mousemove',handleMouseMove); document.body.addEventListener('mouseleave',handleMouseLeave);
+      }
+
+      const steps = Array.from(document.querySelectorAll('.form-step'));
+      const stepIndicators = Array.from(document.querySelectorAll('.step-progress .step'));
+      const progressBarFills = Array.from(document.querySelectorAll('.progress-bar-fill'));
+      const nextBtn = document.querySelector('.next-btn');
+      const prevBtn = document.querySelector('.prev-btn');
+      const submitBtn = document.getElementById('submit-doctor');
+      let currentStep = 1;
+
+      function updateFormStep() {
+        steps.forEach(step => { step.classList.toggle('active', parseInt(step.dataset.step) === currentStep); });
+        prevBtn.style.display = currentStep > 1 ? 'inline-block' : 'none';
+        nextBtn.style.display = currentStep < steps.length ? 'inline-block' : 'none';
+        submitBtn.style.display = currentStep === steps.length ? 'inline-block' : 'none';
+      }
+      function updateProgress() {
+        stepIndicators.forEach((step, index) => {
+          if (index < currentStep -1) { step.classList.add('completed'); } else { step.classList.remove('completed'); }
+          step.classList.toggle('active', index + 1 === currentStep);
+        });
+        progressBarFills.forEach((fill, index) => { fill.style.width = (index < currentStep - 1) ? '100%' : '0%'; });
+      }
+
+      nextBtn.addEventListener('click', () => { if (currentStep < steps.length) { currentStep++; updateFormStep(); updateProgress(); } });
+      prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateFormStep(); updateProgress(); } });
+      updateFormStep(); updateProgress();
+
+      // Location picker wiring
+      const openBtn = document.getElementById('open-location-picker');
+      const latInput = document.getElementById('clinic_latitude');
+      const lngInput = document.getElementById('clinic_longitude');
+      const preview = document.getElementById('location-preview');
+
+      if (submitBtn) submitBtn.disabled = true;
+
+      let popupRef = null;
+      const targetOrigin = window.location.origin;
+
+      function onMessage(event){
+        if (event.origin !== targetOrigin) return; // same-origin check
+        const d = event.data || {};
+        if (d && d.type === 'location-picked' && typeof d.lat === 'number' && typeof d.lng === 'number'){
+          latInput.value = d.lat.toFixed(6);
+          lngInput.value = d.lng.toFixed(6);
+          if (preview) preview.textContent = `Selected: ${d.lat.toFixed(5)}, ${d.lng.toFixed(5)}`;
+          if (submitBtn) submitBtn.disabled = false;
+          if (popupRef && !popupRef.closed) popupRef.close();
+        }
+      }
+      window.addEventListener('message', onMessage, false);
+
+      if (openBtn){
+        openBtn.addEventListener('click', () => {
+          popupRef = window.open('/picker/map', 'picker', 'width=520,height=520,resizable=yes,scrollbars=no');
+        });
+      }
+
+      // Final guard: block submit unless coords exist
+      const form = document.getElementById('doctor-register-form');
+      form.addEventListener('submit', (e) => {
+        if (!latInput.value || !lngInput.value){
+          e.preventDefault();
+          alert('Please select the clinic location before submitting.');
+        }
+      });
+    });
+  </script>
+
+  <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+</body>
+</html>

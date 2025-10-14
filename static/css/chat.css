@@ -1,0 +1,233 @@
+/* ---
+  Corrected Fullscreen & Aligned Chat UI CSS
+--- */
+
+:root {
+    --font-family: 'Inter', sans-serif;
+    --background-dark: #121212;
+    --surface-1: #1E1E1E;
+    --primary-accent: #F7971E;
+    --text-main: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --border-color: #383838;
+    --sent-bubble-bg: #F7971E;
+    --received-bubble-bg: #3A3A3C;
+}
+
+/* Make the body and html take up the full screen */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling on the body */
+}
+
+body {
+    background-color: var(--background-dark);
+    font-family: var(--font-family);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- CHAT CONTAINER (MODIFIED FOR FULLSCREEN) --- */
+.chat-container {
+    width: 100%;
+    height: 100%;
+    background-color: var(--surface-1);
+    border-radius: 0; /* No radius for fullscreen */
+    border: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+/* --- CHAT HEADER --- */
+.chat-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; /* Use flexbox for alignment */
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    background-color: var(--background-dark);
+}
+.back-to-dash {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.back-to-dash:hover {
+    color: var(--text-main);
+}
+.header-info {
+    text-align: left;
+}
+.header-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+.header-info p {
+    margin: 4px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* --- MESSAGES AREA --- */
+.chat-messages {
+    flex-grow: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.message-bubble {
+    padding: 10px 16px;
+    border-radius: 20px;
+    max-width: 75%;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.message-bubble.sent {
+    background-color: var(--sent-bubble-bg);
+    color: #121212;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end; /* This aligns it to the right */
+}
+.message-bubble.received {
+    background-color: var(--received-bubble-bg);
+    color: var(--text-main);
+    border-bottom-left-radius: 4px;
+    align-self: flex-start; /* This aligns it to the left */
+}
+
+.error-message {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* --- INPUT AREA --- */
+.chat-input-area {
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--background-dark);
+}
+#message-input {
+    flex-grow: 1;
+    background-color: #2a2a2a;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    height: 40px;
+    padding: 0 1rem;
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+}
+#send-btn {
+    background: var(--primary-accent);
+    color: var(--background-dark);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* --- CHAT LIST PAGE (for Doctors) --- */
+.chat-list-page {
+    align-items: stretch; /* Make children stretch to full height */
+    justify-content: flex-start;
+}
+.chat-list-container {
+    width: 100%;
+    height: 100%;
+    max-width: none; /* Remove max-width */
+    margin-top: 0; /* Remove top margin */
+    display: flex;
+    flex-direction: column;
+}
+.chat-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--background-dark);
+}
+.chat-list-header h1 { 
+    font-size: 1.5rem;
+    margin: 0;
+}
+.back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.chat-list-item {
+    background-color: var(--surface-1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.chat-list-item:hover { background-color: #2a2a2a; }
+.chat-list-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-accent);
+    color: var(--background-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.chat-list-info h4 { margin: 0; color: var(--text-main); }
+.chat-list-info p { margin: 2px 0 0; color: var(--text-secondary); font-size: 0.85rem;}
+.no-chats { text-align: center; color: var(--text-secondary); padding: 2rem; }
+
+/* --- START: THEMED SCROLLBAR --- */
+/* This targets the scrollbar in the messages area and the doctor's chat list */
+.chat-messages::-webkit-scrollbar,
+.chat-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track,
+.chat-list::-webkit-scrollbar-track {
+    background: transparent; /* Make track invisible */
+}
+
+.chat-messages::-webkit-scrollbar-thumb,
+.chat-list::-webkit-scrollbar-thumb {
+    background-color: #2a2a2a; /* A dark grey for the handle */
+    border-radius: 4px;
+    border: 2px solid var(--surface-1); /* Creates padding effect */
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover,
+.chat-list::-webkit-scrollbar-thumb:hover {
+    background-color: #3a3a3a; /* Slightly lighter on hover */
+}
+/* --- END: THEMED SCROLLBAR --- */
+

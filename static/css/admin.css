@@ -1,0 +1,213 @@
+/* static/css/admin.css */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.admin-header {
+    background-color: #111;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-header h1 { margin: 0; font-size: 1.5rem; }
+.admin-header a { color: #f0ad4e; text-decoration: none; font-weight: bold; }
+
+.admin-container {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.flash-message {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+.flash-message.success { background-color: #28a745; color: white; }
+.flash-message.error { background-color: #dc3545; color: white; }
+
+.doctor-card {
+    background-color: #252525;
+    border: 1px solid #444;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.card-header {
+    padding: 1rem 1.5rem;
+    background-color: #303030;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.profile-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #555;
+}
+.card-header h3 { margin: 0; font-size: 1.25rem; }
+.card-header p { margin: 2px 0 0; color: #aaa; font-size: 0.9rem; }
+
+.card-body { padding: 1.5rem; }
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-grid p, .info-grid .info-item { margin: 0; }
+.info-grid strong { color: #bbb; display: inline-block; margin-right: 8px; }
+.info-grid i { color: #888; margin-right: 10px; width: 16px; text-align: center; }
+.info-item.full-width { grid-column: 1 / -1; }
+.address-text, .qualifications-text { margin-top: 5px; padding-left: 26px; color: #ccc; }
+
+.location-value-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.coords-text { color: #ccc; }
+.view-map-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.view-map-btn:hover { background-color: #0056b3; }
+
+.document-links {
+    border-top: 1px solid #444;
+    padding-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.document-links a {
+    color: #5bc0de;
+    text-decoration: none;
+    background-color: #444;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+.document-links a:hover { background-color: #555; }
+
+.card-actions {
+    background-color: #303030;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid #555;
+}
+.card-actions button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+}
+.card-actions button:hover { opacity: 0.9; }
+.btn-approve { background-color: #28a745; color: white; }
+.btn-reject { background-color: #dc3545; color: white; }
+
+.no-requests { text-align: center; font-size: 1.2rem; color: #888; padding: 3rem 0; }
+
+/* Map Modal Styles */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.modal-backdrop:not(.hidden) { opacity: 1; }
+.modal-box {
+    background-color: #181818;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #333;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s;
+}
+.modal-backdrop:not(.hidden) .modal-box { transform: scale(1); }
+
+.map-modal-box {
+    max-width: 800px;
+    height: 80vh;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.map-modal-box h3 { margin: 0 0 1rem 0; text-align: center; }
+.map-modal-box iframe {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+.close-modal-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid #444;
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.close-modal-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+    transform: scale(1.1);
+}

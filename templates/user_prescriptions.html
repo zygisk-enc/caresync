@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medication Reminders - CareSync</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prescription.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reminders.css') }}">
+</head>
+<body>
+    <div class="prescription-container">
+        <header class="page-header">
+            <h1>Medication Reminders</h1>
+            <a href="{{ url_for('main.home') }}" class="back-link">Back to Dashboard</a>
+        </header>
+
+        <section id="upcoming-reminders-section">
+            <h2>Your Upcoming Reminders</h2>
+            <div id="reminders-list-container" class="item-list">
+                <p>Loading reminders...</p>
+            </div>
+        </section>
+        <p class="page-description">
+            View your prescriptions below and set reminders. You can also create custom reminders for any purpose.
+        </p>
+        <button id="custom-reminder-btn" class="action-btn">Create Custom Reminder</button>
+
+        <h2 style="margin-top: 2rem;">My E-Prescriptions</h2>
+        <div class="item-list">
+        {% for prescription, doctor in prescriptions %}
+            <div class="item-card">
+                <div class="info-group">
+                    <strong>Dr. {{ doctor.full_name }}</strong><br>
+                    <small>Prescribed on: {{ prescription.date_prescribed.strftime('%B %d, %Y') }}</small>
+                </div>
+                <div class="info-group" style="justify-self: end;">
+                    <a href="{{ url_for('prescription.view_prescription', prescription_id=prescription.id) }}" class="action-btn-secondary">View Details</a>
+                    <button class="action-btn reminder-btn" data-prescription-id="{{ prescription.id }}">Set Reminder</button>
+                </div>
+            </div>
+        {% else %}
+            <p class="no-items">You have not received any prescriptions yet.</p>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div id="reminder-modal" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3 id="modal-title">Set Reminder</h3>
+            <form id="reminder-form">
+                <input type="hidden" id="medication-id-input">
+                
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" id="prev-month">&lt;</button>
+                        <h4 id="month-year"></h4>
+                        <button type="button" id="next-month">&gt;</button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Selected Dates:</label>
+                    <div id="selected-dates" class="tags-container"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="time-input">Add Reminder Time(s):</label>
+                    <div class="time-adder">
+                        <input type="time" id="time-input" class="prescription-form-input">
+                        <button type="button" id="add-time-btn" class="add-med-btn">Add Time</button>
+                    </div>
+                    <div id="selected-times" class="tags-container"></div>
+                </div>
+
+                <div class="form-group" id="custom-message-group">
+                    <label for="custom-message">Custom Message (Optional):</label>
+                    <textarea id="custom-message" rows="2" placeholder="e.g., 'Take after lunch'"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-reminder-btn" class="action-btn-secondary">Cancel</button>
+                    <button type="submit" class="action-btn-primary">Save Reminders</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/reminders.js') }}"></script>
+</body>
+</html>

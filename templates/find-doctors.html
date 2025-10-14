@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Doctors - CareSync</title>
+    
+    <!-- === FONT IMPORTS (Google Fonts) === -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- === START: Updated Stylesheet Link === -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/find-doctors-pro.css') }}">
+    <!-- === END: Updated Stylesheet Link === -->
+    
+    <!-- === ICON LIBRARY (Font Awesome) === -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <!-- Starfield background can be removed if a cleaner look is preferred -->
+    <div id="starfield-container"></div>
+    
+    
+        <header class="main-header">
+            <div class="header-left">
+                <a href="{{ url_for('main.home') }}" id="logo-link">
+                    <h1 class="header-logo">CareSync</h1>
+                </a>
+            </div>
+        </header>
+    <div id="app-wrapper"></div>
+        <main>
+            <div class="doctors-page-container">
+                <div class="top-controls">
+                    <div class="page-search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="doctor-search-input" placeholder="Search by name, specialization, or clinic...">
+                    </div>
+
+                    <div class="specialization-filters" id="spec-filters">
+                        <button class="spec-filter-btn active" data-spec="All">All</button>
+                        {% for spec in specializations %}
+                            <button class="spec-filter-btn" data-spec="{{ spec }}">{{ spec }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="doctors-split-layout">
+                    <div class="left-panel" id="doctor-list-container">
+                        {% if doctors %}
+                            {% for doctor in doctors %}
+                                <div class="doctor-list-item-final" data-id="{{ doctor.id }}" data-address="{{ doctor.clinic_address }}">
+                                    <img src="{{ url_for('static', filename='uploads/' + doctor.photo_filename) if doctor.photo_filename else url_for('static', filename='assets/default-profile.png') }}" alt="Photo of {{ doctor.full_name }}">
+                                    <div class="doctor-list-info">
+                                        <h4>{{ doctor.full_name }}</h4>
+                                        <p>{{ doctor.specialization }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="no-doctors-found">
+                                <p>No doctors found.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="right-panel" id="profile-viewer-box">
+                        <!-- Initial placeholder content -->
+                        <div class="doctor-profile-content">
+                             <div style="text-align: center; color: var(--text-secondary); margin-top: 4rem;">
+                                <p style="font-size: 1.2rem; font-weight: 500;">Select a doctor</p>
+                                <p>Choose a doctor from the list to see their profile details.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/doctors-final.js') }}"></script>
+    <!-- START: Removed the script that adds the 'View Status' button -->
+    <!-- <script src="{{ url_for('static', filename='js/appointment-status.js') }}"></script> -->
+    <!-- END: Script removed -->
+    <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+    <!-- ADD THIS SCRIPT TAG -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Select Clinic Location</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  >
+  <style>
+    :root { color-scheme: dark; }
+    html, body { height: 100%; margin: 0; background: #0f0f10; color: #ddd; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    #map { height: 78vh; width: 100%; }
+    .bar {
+      height: 22vh; min-height: 110px; display: flex; gap: 12px; align-items: center; justify-content: space-between;
+      padding: 12px 14px; border-top: 1px solid #222; background: #121212;
+    }
+    .status { font-size: 0.95rem; color: #c9c9c9; }
+    .btn {
+      background: linear-gradient(90deg, #5c47ff, #9d4edd);
+      border: none; color: #fff; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600;
+    }
+    .btn.secondary { background: transparent; border: 1px solid #444; color: #ddd; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .hint { font-size: 0.85rem; color: #9aa0a6; margin-top: 6px; }
+    .coords { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="map" role="application" aria-label="Clinic location picker map"></div>
+  <div class="bar">
+    <div>
+      <div class="status" id="status">Click anywhere on the map to drop a pin, then drag to refine.</div>
+      <div class="hint">Tip: Zoom with mouse wheel or touch; double‑click to zoom in.</div>
+    </div>
+    <div>
+      <button class="btn secondary" id="use-current" type="button" title="Use device location">Use current location</button>
+      <button class="btn secondary" id="reset" type="button">Reset</button>
+      <button class="btn" id="confirm" type="button" disabled>Use this location</button>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script>
+    // Same‑origin expected; parent page checks event.origin as well.
+    const targetOrigin = window.location.origin; // Use strict origin matching per MDN guidance. [web:14]
+
+    // Initialize map (pan over India by default)
+    const map = L.map('map', { zoomControl: true }).setView([20.5937, 78.9629], 5); // Leaflet map setup. [web:25][web:23]
+
+    // OSM tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map); // Standard Leaflet OSM tile layer. [web:25][web:23]
+
+    let marker = null;
+    let chosen = null;
+
+    const statusEl = document.getElementById('status');
+    const confirmBtn = document.getElementById('confirm');
+    const resetBtn = document.getElementById('reset');
+    const useCurrentBtn = document.getElementById('use-current');
+
+    function setChosen(lat, lng) {
+      chosen = { lat, lng };
+      statusEl.innerHTML = 'Selected: <span class="coords">' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</span>';
+      confirmBtn.disabled = false;
+    } // Store selection and enable confirm. [web:25]
+
+    function placeOrMoveMarker(lat, lng) {
+      const ll = L.latLng(lat, lng);
+      if (marker) {
+        marker.setLatLng(ll);
+      } else {
+        marker = L.marker(ll, { draggable: true }).addTo(map);
+        marker.on('dragend', (ev) => {
+          const p = ev.target.getLatLng();
+          setChosen(p.lat, p.lng);
+        });
+      }
+      setChosen(lat, lng);
+    } // Create or move marker and bind drag updates. [web:25][web:23]
+
+    map.on('click', (e) => {
+      const { lat, lng } = e.latlng;
+      placeOrMoveMarker(lat, lng);
+    }); // Click to select location. [web:25]
+
+    resetBtn.addEventListener('click', () => {
+      if (marker) { map.removeLayer(marker); marker = null; }
+      chosen = null;
+      statusEl.textContent = 'Click anywhere on the map to drop a pin, then drag to refine.';
+      confirmBtn.disabled = true;
+    }); // Reset selection state. [web:25]
+
+    // New: Use device geolocation
+    useCurrentBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        statusEl.textContent = 'Geolocation not supported by this browser.';
+        return;
+      }
+      statusEl.textContent = 'Locating… please grant permission.';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          placeOrMoveMarker(lat, lng);
+          map.setView([lat, lng], Math.max(map.getZoom(), 16));
+        },
+        (err) => {
+          const msg = err && err.message ? err.message : 'Unable to retrieve your location.';
+          statusEl.textContent = `Location error: ${msg}`;
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }); // Use Geolocation API to center map and set marker. [web:74][web:81]
+
+    confirmBtn.addEventListener('click', () => {
+      if (!chosen) return;
+      // Send back to opener and close
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage(
+          { type: 'location-picked', lat: chosen.lat, lng: chosen.lng },
+          targetOrigin
+        );
+      }
+      window.close();
+    }); // Return selection via postMessage with strict origin. [web:14]
+
+    // Optional: Notify opener this window is ready
+    if (window.opener && !window.opener.closed) {
+      try { window.opener.postMessage({ type: 'picker-ready' }, targetOrigin); } catch (e) {}
+    } // Optional readiness ping using postMessage. [web:14]
+  </script>
+</body>
+</html>

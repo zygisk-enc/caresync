@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Appointments - CareSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/doctor_appointments.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="appointments-container">
+        <header class="appointments-header">
+            <h1>Appointment Requests</h1>
+            <a href="{{ url_for('doctors.dashboard') }}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </header>
+
+        <!-- Flash messages for success/error on actions -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main class="appointments-content">
+            <section class="appointments-section">
+                <h2>Pending Requests</h2>
+                {% if appointments.pending %}
+                    <div class="appointment-list">
+                    {% for appt, user in appointments.pending %}
+                        <div class="appointment-card">
+                            <div class="info-group patient-info">
+                                <i class="fas fa-user-circle"></i>
+                                <span>{{ user.full_name }}</span>
+                            </div>
+                            <div class="info-group">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>{{ appt.appointment_datetime.strftime('%B %d, %Y') }}</span>
+                            </div>
+                            <div class="info-group">
+                                <i class="fas fa-clock"></i>
+                                <span>{{ appt.appointment_datetime.strftime('%I:%M %p') }}</span>
+                            </div>
+                            <div class="appointment-actions">
+                                <form action="{{ url_for('doctors.update_appointment_status', appointment_id=appt.id) }}" method="POST">
+                                    <input type="hidden" name="action" value="confirm">
+                                    <button type="submit" class="btn btn-accept">Accept</button>
+                                </form>
+                                <form action="{{ url_for('doctors.update_appointment_status', appointment_id=appt.id) }}" method="POST">
+                                    <input type="hidden" name="action" value="reject">
+                                    <button type="submit" class="btn btn-reject">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="no-appointments">No pending appointment requests.</p>
+                {% endif %}
+            </section>
+
+            <section class="appointments-section">
+                <h2>Upcoming Confirmed</h2>
+                {% if appointments.confirmed %}
+                     <div class="appointment-list">
+                    {% for appt, user in appointments.confirmed %}
+                        <div class="appointment-card confirmed">
+                            <div class="info-group patient-info"><i class="fas fa-user-circle"></i> <span>{{ user.full_name }}</span></div>
+                            <div class="info-group"><i class="fas fa-calendar-alt"></i> <span>{{ appt.appointment_datetime.strftime('%B %d, %Y') }}</span></div>
+                            <div class="info-group"><i class="fas fa-clock"></i> <span>{{ appt.appointment_datetime.strftime('%I:%M %p') }}</span></div>
+                            <div class="status-tag"><i class="fas fa-check-circle"></i> Confirmed</div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="no-appointments">No upcoming confirmed appointments.</p>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>
+

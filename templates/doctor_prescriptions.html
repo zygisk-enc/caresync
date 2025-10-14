@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Prescriptions - CareSync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prescription.css') }}">
+</head>
+<body>
+    <div class="prescription-container">
+        <header class="page-header">
+            <h1>Manage Prescriptions</h1>
+            <a href="{{ url_for('doctors.dashboard') }}" class="back-link">Back to Dashboard</a>
+        </header>
+
+        <section style="margin-bottom: 3rem;">
+            <h2>Prescription History</h2>
+            <div class="item-list">
+            {% for prescription, user in prescriptions %}
+                <a href="{{ url_for('prescription.view_prescription', prescription_id=prescription.id) }}" class="item-card">
+                    <div class="info-group">
+                        <i class="fas fa-user"></i>
+                        <strong>Patient: {{ user.full_name }}</strong>
+                    </div>
+                    <div class="info-group">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Prescribed on: {{ prescription.date_prescribed.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <span class="action-btn">View Details</span>
+                </a>
+            {% else %}
+                <p class="no-items">You have not written any prescriptions yet.</p>
+            {% endfor %}
+            </div>
+        </section>
+        
+        <section>
+            <h2>Write New Prescription (from a Past Consultation)</h2>
+            <div class="item-list">
+            {% for call, user in calls %}
+                <div class="item-card">
+                    <div class="info-group">
+                        <i class="fas fa-user"></i>
+                        <strong>Patient: {{ user.full_name }}</strong>
+                    </div>
+                    <div class="info-group">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Date: {{ call.scheduled_time.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <a href="{{ url_for('prescription.write_prescription', call_id=call.id) }}" class="action-btn">Write Prescription</a>
+                </div>
+            {% else %}
+                <p class="no-items">No recent consultations are awaiting a prescription.</p>
+            {% endfor %}
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CareSync Video Call</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/call_page.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+    <div class="call-container">
+        <div id="remote-video-container" class="video-container">
+            <video id="remoteVideo" autoplay playsinline></video>
+            <div id="status-overlay">
+                <div class="loader"></div>
+                <p id="status-text">Connecting to peer...</p>
+            </div>
+        </div>
+
+        <div id="local-video-container" class="video-container">
+            <video id="localVideo" autoplay muted playsinline></video>
+        </div>
+
+            <div class="controls-bar">
+                <button id="toggle-audio-btn" class="control-btn" title="Mute Audio" disabled>
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button id="toggle-video-btn" class="control-btn" title="Stop Video" disabled>
+                    <i class="fas fa-video"></i>
+                </button>
+                <button id="hangup-btn" class="control-btn hangup-btn" disabled>
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const callId = {{ call_id|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/call_client.js') }}"></script>
+</body>
+</html>

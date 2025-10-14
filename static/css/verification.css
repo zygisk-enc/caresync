@@ -1,0 +1,39 @@
+/* static/css/verification.css */
+
+.verify-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.verify-box {
+  background-color: #121212;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  border: 1px solid #222;
+  width: 100%;
+  max-width: 420px;
+  text-align: left;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.verify-box h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.6rem;
+  color: #E0E0E0;
+  font-weight: 600;
+  text-align: center;
+}
+
+.verify-box p {
+  margin: 0 0 1.25rem 0;
+  color: #B0B0B0;
+  font-size: 0.95rem;
+  text-align: center;
+}

@@ -1,0 +1,1382 @@
+/* =================================================================== */
+/* A. CORE & LAYOUT STYLES */
+/* =================================================================== */
+
+/* A1. General Body & Reset */
+/* ------------------------------------------------------------------- */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #000000; /* AMOLED Black */
+    color: #E0E0E0;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* A2. Main Application Wrapper */
+/* ------------------------------------------------------------------- */
+#app-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    transition: filter 0.3s ease-in-out, opacity 0.5s ease-in;
+    position: relative;
+    z-index: 1;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-start; /* MODIFIED: Aligns content to the top */
+    padding-top: 2vh; /* MODIFIED: Adds a small space from the top */
+}
+
+/* A3. Header */
+/* ------------------------------------------------------------------- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0rem 0;
+    width: 100%;
+}
+
+.header-logo {
+    font-size: 1.8rem;
+    color: #E0E0E0;
+    font-weight: 500;
+    margin-left: 15px;
+}
+
+#logo-link {
+    text-decoration: none;
+}
+
+header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+header .header-right a {
+    color: #B0B0B0;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+header .header-right a:hover {
+    color: #F7971E;
+}
+
+.user-profile {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #F7971E;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+/* A4. Footer */
+/* ------------------------------------------------------------------- */
+footer {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+footer a {
+    color: #8A94A3;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #FFFFFF;
+}
+
+footer a:not(:first-child)::before {
+    content: '—';
+    color: #8A94A3;
+    margin: 0 1.5rem;
+}
+
+/* =================================================================== */
+/* B. BACKGROUND & ANIMATIONS */
+/* =================================================================== */
+
+/* B1. Starfield Background */
+/* ------------------------------------------------------------------- */
+#starfield-container {
+    position: fixed;
+    top: -50px; left: -50px;
+    width: calc(100% + 100px);
+    height: calc(100% + 100px);
+    z-index: 0;
+    animation: drift-container 120s infinite alternate linear;
+}
+
+.star {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 50%;
+    animation: shine 2s infinite alternate;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.star.s1 { width: 2px; height: 2px; }
+.star.s2 { width: 3px; height: 3px; }
+.star.s3 { width: 4px; height: 4px; }
+
+@keyframes drift-container {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-100px, -50px); }
+}
+@keyframes shine {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes fast-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes flow-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* =================================================================== */
+/* C. SPLASH SCREEN & MODALS */
+/* =================================================================== */
+
+/* C1. Splash Screen */
+/* ------------------------------------------------------------------- */
+#splash-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+#splash-screen .logo {
+    animation: fadeIn 1s ease-in-out;
+}
+#splash-screen .logo img {
+    width: 150px;
+    height: auto;
+    display: block;
+}
+
+/* C2. Disclaimer Modal */
+/* ------------------------------------------------------------------- */
+#disclaimer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+.blur-background {
+    filter: blur(5px);
+}
+#disclaimer-box {
+    background-color: #121212;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #222;
+    width: 90%;
+    max-width: 500px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+#disclaimer-box h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+}
+#disclaimer-box p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #B0B0B0;
+}
+.disclaimer-options {
+    margin: 1.5rem 0;
+}
+.disclaimer-confirm {
+    display: flex;
+    align-items: center;
+}
+.disclaimer-confirm:first-child {
+    margin-bottom: 0.75rem;
+}
+.disclaimer-confirm input[type="checkbox"] {
+    margin-right: 0.75rem;
+    accent-color: #F7971E;
+}
+.disclaimer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+#disagree-btn {
+    background-color: #222;
+    color: #E0E0E0;
+}
+#agree-btn {
+    background-color: #F7971E;
+    color: #000000;
+}
+#agree-btn:disabled {
+    background-color: #222;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* =================================================================== */
+/* D. HOME PAGE CONTENT */
+/* =================================================================== */
+
+/* D1. Welcome Section */
+/* ------------------------------------------------------------------- */
+.welcome-section {
+    text-align: left;
+}
+.welcome-section .gradient-text {
+    font-size: 3.25rem;
+    font-weight: 500;
+    margin: 0;
+    background: linear-gradient(
+        90deg, 
+        #d62976, #962fbf, #4f5bd5, #feda75, 
+        #fa7e1e, #d62976
+    );
+    background-size: 400% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: flow-gradient 4s linear infinite;
+}
+.welcome-section h1 {
+    color: #FFFFFF;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0.5rem 0 1.5rem 0;
+}
+
+/* D2. Quick Actions */
+/* ------------------------------------------------------------------- */
+.quick-actions-section {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+.quick-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    color: #E0E0E0;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+}
+.quick-action-btn:hover {
+    background-color: #2a2a2a;
+    border-color: #F7971E;
+    transform: translateY(-2px);
+}
+.quick-action-btn i {
+    color: #888;
+    transition: color 0.3s;
+}
+.quick-action-btn:hover i {
+    color: #F7971E;
+}
+
+
+/* =================================================================== */
+/* E. CHAT & PROMPT INTERFACE */
+/* =================================================================== */
+
+/* E1. Prompt Bar */
+/* ------------------------------------------------------------------- */
+.ai-prompt-section {
+    margin-top: 2rem;
+}
+.prompt-wrapper {
+    position: relative;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    padding: 1.5px; 
+    background: #222;
+    overflow: hidden; 
+}
+.prompt-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        #d62976, #fa7e1e, #feda75, #962fbf, #4f5bd5, #d62976
+    );
+    opacity: 1;
+    animation: fast-rotate 1.5s linear infinite; 
+}
+.prompt-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #1f1f1f;
+    border-radius: 14px;
+    padding: 1.5rem;
+    width: 100%;
+    position: relative; 
+    z-index: 2;
+    min-height: 120px; 
+}
+.prompt-container textarea {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    font-family: 'Inter', sans-serif;
+    text-align: left;
+    resize: none;
+    overflow-y: auto;
+    line-height: 1.6;
+    min-height: 40px; 
+    max-height: 200px;
+    flex-grow: 1; 
+    margin-top: 0; 
+}
+.prompt-container textarea::placeholder {
+    color: #888;
+}
+.bottom-icons {
+    width: 100%;
+    padding-top: 1rem;
+    display: flex;
+    gap: 2rem;
+    color: #888;
+    position: relative;
+    align-items: flex-end;
+}
+.bottom-icons i {
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.bottom-icons i:hover {
+    color: #FFFFFF;
+}
+.send-btn {
+    background-color: #F7971E;
+    color: #000;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+/* E2. Chat Display Area */
+/* ------------------------------------------------------------------- */
+.welcome-section.hidden, .quick-actions-section.hidden {
+    display: none;
+}
+.chat-display-area {
+    display: none;
+    width: 100%;
+    max-width: 960px;
+    overflow-y: auto;
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: -2rem;
+    flex-grow: 1;
+}
+.chat-bubble {
+    padding: 0.75rem 1.25rem;
+    border-radius: 18px;
+    max-width: 75%;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+.user-bubble {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+}
+.bot-bubble {
+    background-color: #F7971E;
+    color: #000;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+}
+
+/* E3. Fixed Prompt Bar (Active Chat State) */
+/* ------------------------------------------------------------------- */
+.ai-prompt-section.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    background-color: #000;
+    z-index: 100;
+    margin-top: 0;
+}
+.ai-prompt-section.fixed-bottom .prompt-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+}
+.ai-prompt-section.fixed-bottom .prompt-container {
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    min-height: auto;
+}
+.ai-prompt-section.fixed-bottom .prompt-container textarea {
+    font-size: 1rem;
+    padding-right: 1rem;
+    max-height: 100px;
+}
+.ai-prompt-section.fixed-bottom .bottom-icons {
+    padding-top: 0;
+    gap: 1.5rem;
+    align-items: center;
+}
+.ai-prompt-section.fixed-bottom #selected-image-preview-container {
+    position: absolute;
+    bottom: 100%;
+    left: 1.5rem;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    border: none;
+}
+
+/* E4. Image Upload & Preview */
+/* ------------------------------------------------------------------- */
+#upload-options {
+    position: absolute;
+    bottom: 1.85rem; 
+    left: 0; 
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 0.2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+#image-option-btn {
+    background: none;
+    border: none;
+    color: #E0E0E0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    text-align: left;
+}
+#image-option-btn:hover {
+    background-color: #3a3a3a;
+}
+#selected-image-preview-container {
+    display: flex; 
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px; 
+    border-bottom: 1px solid #333;
+    max-height: 100px; 
+    overflow-y: auto;
+}
+.image-preview-box {
+    position: relative;
+    width: 80px; 
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #444;
+    background-color: #2a2a2a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+.image-preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.remove-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    line-height: 1; 
+    z-index: 3;
+}
+.remove-image-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+}
+
+
+/* =================================================================== */
+/* F. AUTHENTICATION & FORMS */
+/* =================================================================== */
+
+/* F1. General Auth Wrappers & Boxes */
+/* ------------------------------------------------------------------- */
+.login-wrapper, .register-options-wrapper, .register-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    position: relative;
+    z-index: 1;
+}
+.login-box, .register-options-box, .register-box {
+    background-color: #121212;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    border: 1px solid #222;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: fadeIn 0.5s ease-in-out;
+}
+.login-box { max-width: 400px; }
+.register-options-box { max-width: 450px; }
+.register-box { max-width: 550px; }
+
+/* F2. General Form Elements */
+/* ------------------------------------------------------------------- */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    color: #B0B0B0;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+.form-group input, .register-box .form-group select, .register-box .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #E0E0E0;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.form-group input:focus, .register-box .form-group select:focus, .register-box .form-group textarea:focus {
+    border-color: #F7971E;
+    box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+}
+.input-with-icon {
+    position: relative;
+}
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+.input-with-icon input {
+    padding-left: 40px;
+}
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+.form-row .form-group, .form-row input, .form-row select {
+    flex: 1;
+}
+
+/* F3. Login Specific */
+/* ------------------------------------------------------------------- */
+.login-logo {
+    margin-bottom: 2rem;
+}
+.login-logo img {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+.login-logo h2 {
+    color: #E0E0E0;
+    margin: 0;
+    font-weight: 500;
+}
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #F7971E;
+    border: none;
+    border-radius: 8px;
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.login-btn:hover {
+    background-color: #ffab4a;
+}
+.register-link {
+    margin-top: 1.5rem;
+    color: #B0B0B0;
+    font-size: 0.9rem;
+}
+.register-link a {
+    color: #F7971E;
+    text-decoration: none;
+    font-weight: 500;
+}
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* F4. Registration Options */
+/* ------------------------------------------------------------------- */
+.options-header {
+    margin-bottom: 2.5rem;
+}
+.options-header img {
+    width: 70px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+.options-header h2 {
+    color: #E0E0E0;
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+}
+.options-header p {
+    color: #B0B0B0;
+    margin: 0;
+    font-size: 1rem;
+}
+.options-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #E0E0E0;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.choice-btn:hover {
+    background-color: #2a2a2a;
+    border-color: #F7971E;
+}
+.choice-btn i {
+    font-size: 1.5rem;
+    width: 30px;
+    text-align: center;
+    color: #F7971E;
+}
+.choice-btn.doctor i {
+    color: #4f5bd5;
+}
+.choice-btn.doctor:hover {
+    border-color: #4f5bd5;
+}
+.back-link {
+    margin-top: 2rem;
+    color: #B0B0B0;
+    font-size: 0.9rem;
+}
+.back-link a {
+    color: #F7971E;
+    text-decoration: none;
+    font-weight: 500;
+}
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* F5. User & Doctor Registration */
+/* ------------------------------------------------------------------- */
+.register-header {
+    margin-bottom: 2rem;
+}
+.register-header h2 {
+    color: #E0E0E0;
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+    font-size: 1.8rem;
+}
+.register-header p {
+    color: #B0B0B0;
+    margin: 0;
+    font-size: 1rem;
+}
+.register-box .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1em;
+}
+.register-box .form-group textarea {
+    resize: vertical;
+}
+
+/* F6. Multi-Step Form (Doctor Registration) */
+/* ------------------------------------------------------------------- */
+.form-step {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.form-step.active {
+    display: block;
+}
+.step-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.step-progress .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    color: #888;
+    transition: color 0.3s;
+}
+.step-progress .step span {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    background-color: #121212;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.step-progress .step p {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+.step-progress .step.active span, .step-progress .step.completed span {
+    border-color: #F7971E;
+}
+.step-progress .step.active span {
+     background-color: #F7971E;
+     color: #000;
+}
+.step-progress .step.completed span {
+    background-color: #1f1f1f;
+    color: #F7971E;
+}
+.step-progress .step.active p, .step-progress .step.completed p {
+    color: #E0E0E0;
+}
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background-color: #333;
+    margin: 0 10px;
+    position: relative;
+    top: -10px;
+}
+.progress-bar-fill {
+    width: 0;
+    height: 100%;
+    background-color: #F7971E;
+    transition: width 0.4s ease-in-out;
+}
+.step-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+.nav-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+.prev-btn {
+    background-color: #333;
+    color: #E0E0E0;
+}
+.prev-btn:hover {
+    background-color: #444;
+}
+.next-btn {
+    background-color: #F7971E;
+    color: #000;
+}
+.next-btn:hover {
+    opacity: 0.9;
+}
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(90deg, #4f5bd5, #962fbf);
+    color: #fff;
+    flex-grow: 1;
+}
+.submit-btn:hover {
+    opacity: 0.9;
+}
+.file-input {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #B0B0B0;
+}
+.file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.file-input::before {
+    content: 'Select File';
+    display: inline-block;
+    background: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px 12px;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 10px;
+}
+.file-input:hover::before {
+    border-color: #F7971E;
+}
+
+/* F7. Password Validation Feedback */
+/* ------------------------------------------------------------------- */
+.password-wrapper {
+    position: relative;
+}
+#password-feedback {
+    position: absolute;
+    left: 105%;
+    top: 0;
+    width: 220px;
+    padding: 1rem;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+#password-feedback.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+.password-rules {
+    text-align: left;
+    margin: -1rem 0 1rem 0;
+    font-size: 0.85rem;
+}
+.password-rules p {
+    margin: 0.3rem 0;
+    transition: color 0.3s;
+}
+.password-rules p.invalid {
+    color: #b0b0b0;
+}
+.password-rules p.valid {
+    color: #4CAF50;
+}
+.password-rules p.valid::before {
+    content: '✓ ';
+}
+#match-feedback.invalid {
+    color: #f44336;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+
+/* =================================================================== */
+/* G. DOCTOR DIRECTORY */
+/* =================================================================== */
+
+/* G1. Main Layout & Search */
+/* ------------------------------------------------------------------- */
+.doctors-page-wrapper {
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+.find-doctors-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #E0E0E0;
+}
+.doctor-search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+}
+.doctor-search-bar i {
+    color: #888;
+    margin: 0 1rem;
+}
+.doctor-search-bar input {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #E0E0E0;
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+}
+.doctor-search-bar button {
+    background-color: #F7971E;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+.doctor-search-bar button:hover {
+    opacity: 0.9;
+}
+
+/* G2. Specialization Grid */
+/* ------------------------------------------------------------------- */
+.specialization-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+.specialization-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: #E0E0E0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.specialization-card:hover {
+    transform: translateY(-5px);
+    border-color: #F7971E;
+    background-color: #2a2a2a;
+}
+.specialization-card i {
+    font-size: 2.5rem;
+    color: #F7971E;
+}
+
+/* G3. Doctor List & Details (Split View) */
+/* ------------------------------------------------------------------- */
+.doctors-split-layout {
+    display: flex;
+    height: calc(100vh - 80px); /* Full height minus header */
+    width: 100%;
+}
+.left-panel {
+    width: 400px;
+    background-color: rgba(18, 18, 18, 0.5); /* Slightly transparent */
+    border-right: 1px solid #222;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+.left-panel h3 {
+    margin-top: 0;
+}
+.right-panel {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 2.5rem;
+}
+.doctor-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+}
+.doctor-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.doctor-info h4 {
+    margin: 0 0 0.25rem 0;
+    color: #fff;
+}
+.doctor-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #B0B0B0;
+}
+.doctor-info .spec {
+    font-weight: 500;
+    color: #ddd;
+}
+.doctor-info .loc i {
+    margin-right: 0.5rem;
+    color: #888;
+}
+.left-panel .doctor-card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+}
+.left-panel .doctor-card:hover {
+    background-color: #2a2a2a;
+    transform: translateY(-2px);
+}
+.left-panel .doctor-card.active {
+    border-color: #F7971E;
+    background-color: #25201a;
+}
+.placeholder-content {
+    text-align: center;
+}
+.placeholder-content i {
+    font-size: 4rem;
+    color: #444;
+    margin-bottom: 1.5rem;
+}
+.placeholder-content h3 {
+    color: #E0E0E0;
+    margin: 0 0 0.5rem 0;
+}
+.placeholder-content p {
+    color: #B0B0B0;
+    margin: 0;
+    max-width: 300px;
+}
+.doctor-profile-details {
+    text-align: left;
+    width: 100%;
+    padding: 1.5rem;
+}
+.doctor-profile-details img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #333;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+.doctor-profile-details h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: #fff;
+}
+.doctor-profile-details .spec {
+    font-size: 1.1rem;
+    color: #B0B0B0;
+    margin: 0.25rem 0 1.5rem 0;
+}
+.doctor-profile-details hr {
+    border: none;
+    height: 1px;
+    background-color: #333;
+    margin-bottom: 1.5rem;
+}
+.profile-info-row {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.profile-info-row strong {
+    color: #888;
+}
+.profile-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+.action-btn {
+    flex-grow: 1;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+.action-btn:hover {
+    opacity: 0.9;
+}
+.action-btn.book {
+    background-color: #F7971E;
+    color: #000;
+}
+.action-btn.message, .action-btn.call {
+    background-color: #333;
+    color: #E0E0E0;
+}
+
+
+/* =================================================================== */
+/* H. UTILITY & MISCELLANEOUS */
+/* =================================================================== */
+
+/* H1. Utility Classes */
+/* ------------------------------------------------------------------- */
+.hidden {
+    display: none !important;
+}
+
+/* H2. Flash Messages */
+/* ------------------------------------------------------------------- */
+.flash-message {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+.flash-message.error {
+    background-color: #4d1c1c;
+    border: 1px solid #a53333;
+    color: #ffc4c4;
+}
+.flash-message.success {
+    background-color: #1c4d2c;
+    border: 1px solid #33a55b;
+    color: #c4ffe0;
+}
+
+/* H3. Settings Dropdown Menu */
+/* ------------------------------------------------------------------- */
+.settings-menu-container {
+    position: relative;
+}
+.settings-dropdown {
+    position: absolute;
+    top: 150%;
+    right: 0;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0.5rem;
+    width: 150px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+.settings-dropdown.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.settings-dropdown a {
+    display: block;
+    color: #E0E0E0;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.settings-dropdown a:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+
+/* =================================================================== */
+/* I. RESPONSIVE DESIGN */
+/* =================================================================== */
+
+@media (max-width: 992px) {
+    /* Doctor find page adjustments */
+    .doctor-results-layout {
+        grid-template-columns: 1fr;
+    }
+    .doctor-list-container, .doctor-details-container {
+        max-height: none;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    /* General layout adjustments */
+    #app-wrapper {
+        padding: 0 1rem;
+    }
+    .main-content {
+        height: calc(100vh - 120px);
+    }
+
+    /* Typography adjustments */
+    .welcome-section h1 {
+        font-size: 2.5rem;
+    }
+    .welcome-section .gradient-text {
+        font-size: 2.8rem;
+    }
+    
+    /* Prompt bar adjustments */
+    .prompt-container textarea {
+        font-size: 1rem;
+        min-height: 60px;
+        max-height: 200px;
+    }
+    .bottom-icons {
+        gap: 1.5rem;
+    }
+    .ai-prompt-section.fixed-bottom {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Doctor find page split layout */
+    .doctors-split-layout {
+        flex-direction: column;
+        height: auto;
+    }
+    .left-panel {
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid #222;
+    }
+    .right-panel {
+        padding: 1.5rem;
+    }
+}
+
+
+

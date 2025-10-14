@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Conversations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="chat-list-page">
+    <div class="chat-list-container">
+        <header class="chat-list-header">
+            <h1>Your Messages</h1>
+            <a href="{{ url_for('doctors.dashboard') }}" class="back-link">Back to Dashboard</a>
+        </header>
+        <main class="chat-list">
+            {% if conversations %}
+                {% for conversation, user in conversations %}
+                    <a href="{{ url_for('messaging.chat_with_recipient', recipient_id=user.id) }}" class="chat-list-item">
+                        <div class="chat-list-avatar">{{ user.full_name[0] | upper }}</div>
+                        <div class="chat-list-info">
+                            <h4>{{ user.full_name }}</h4>
+                            <p>Last message on {{ conversation.timestamp.strftime('%b %d, %Y') }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p class="no-chats">You have no conversations yet.</p>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

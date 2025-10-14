@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Account - CareSync</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/account-final.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        .status-verified {
+            color: #28a745; /* Green for verified */
+            font-weight: bold;
+        }
+        .status-pending {
+            color: #ffc107; /* Amber for pending */
+            font-weight: bold;
+        }
+        .value i { /* Adds a little space between the icon and text */
+            margin-right: 6px;
+        }
+    </style>
+    </head>
+<body>
+    <div id="starfield-container"></div>
+
+    <header>
+        <div class="header-left">
+            <a href="{{ url_for('doctors.dashboard') }}" id="logo-link">
+                <h1 class="header-logo">CareSync</h1>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="account-page-layout">
+            
+            <aside class="account-sidebar">
+                <div class="profile-summary">
+                    {% if photo_url %}
+                        <img src="{{ photo_url }}" alt="Profile Photo" class="account-avatar-img">
+                    {% else %}
+                        <div class="account-avatar">{{ doctor.full_name[0] | upper }}</div>
+                    {% endif %}
+                    <h3>{{ doctor.full_name }}</h3>
+                    <p>{{ doctor.email }}</p>
+                </div>
+                <nav class="account-nav">
+                    <a href="#" class="active"><i class="fas fa-user-md"></i> Profile Details</a>
+                </nav>
+            </aside>
+
+            <section class="account-main-content">
+                <h2>Profile Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <p class="label">Full Name</p>
+                        <p class="value">{{ doctor.full_name }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Email</p>
+                        <p class="value">{{ doctor.email }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Verification Status</p>
+                        {% if doctor.is_approved %}
+                            <p class="value status-verified">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </p>
+                        {% else %}
+                            <p class="value status-pending">
+                                <i class="fas fa-clock"></i> Pending Review
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Date of Birth</p>
+                        <p class="value">{{ doctor.dob.strftime('%B %d, %Y') if doctor.dob else 'Not specified' }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Phone Number</p>
+                        <p class="value">{{ doctor.phone }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Specialization</p>
+                        <p class="value">{{ doctor.specialization }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Medical License Number</p>
+                        <p class="value">{{ doctor.license_number }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Years of Experience</p>
+                        <p class="value">{{ doctor.experience_years }} years</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="label">Clinic Location (Lat, Lng)</p>
+                        <div class="location-value-wrapper">
+                            <p class="value" id="clinic-coords">{{ doctor.clinic_latitude }}, {{ doctor.clinic_longitude }}</p>
+                            {% if doctor.clinic_latitude and doctor.clinic_longitude %}
+                            <button id="view-location-btn" class="btn-link-style">View on Map</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-item full-width">
+                        <p class="label">Qualifications</p>
+                        <p class="value">{{ doctor.qualifications }}</p>
+                    </div>
+                    <div class="info-item full-width">
+                        <p class="label">Clinic Address</p>
+                        <p class="value">{{ doctor.clinic_address }}</p>
+                    </div>
+                </div>
+
+                <h2 style="margin-top: 2.5rem;">Uploaded Documents</h2>
+                <div class="document-grid">
+                    {% if license_url %}
+                    <a href="{{ license_url }}" target="_blank" class="document-card">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Medical License</span>
+                    </a>
+                    {% endif %}
+                    {% if id_url %}
+                    <a href="{{ id_url }}" target="_blank" class="document-card">
+                        <i class="fas fa-id-card"></i>
+                        <span>Government ID</span>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="account-actions">
+                    <button type="button" id="availability-btn" class="availability-btn {{ 'available' if doctor.is_available else 'unavailable' }}">
+                        {% if doctor.is_available %}
+                            <i class="fas fa-toggle-on"></i>
+                            <span id="availability-text">Available</span>
+                        {% else %}
+                            <i class="fas fa-toggle-off"></i>
+                            <span id="availability-text">Unavailable</span>
+                        {% endif %}
+                    </button>
+
+                    <a href="{{ url_for('doctors.dashboard') }}" class="home-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                    <button id="delete-account-btn" class="delete-btn">Delete Account</button>
+                </div>
+    </main>
+        <div id="map-modal-backdrop" class="modal-backdrop hidden">
+        <div class="modal-box map-modal-box">
+            <button id="close-map-modal-btn" class="close-modal-btn">&times;</button>
+            <h3>Clinic Location</h3>
+            <iframe id="map-iframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+    <div id="delete-modal-backdrop" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3>Are you sure?</h3>
+            <p>This action is irreversible and will permanently delete your account and all associated files.</p>
+            <div class="modal-actions">
+                <button id="cancel-delete-btn" class="nav-btn prev-btn">Cancel</button>
+                <form action="{{ url_for('doctors.delete_doctor_account') }}" method="POST" style="flex-grow: 1;">
+                    <button type="submit" class="delete-btn">Confirm Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <script src="{{ url_for('static', filename='js/doctor_availability.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='js/doctor-account.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/star.js') }}"></script>
+</body>
+</html>

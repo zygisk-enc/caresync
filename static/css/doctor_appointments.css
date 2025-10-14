@@ -1,0 +1,194 @@
+/* static/css/doctor_appointments.css */
+:root {
+    --primary-bg: #121212;
+    --secondary-bg: #1E1E1E;
+    --primary-accent: #F7971E;
+    --text-light: #E0E0E0;
+    --text-dark: #A0A0A0;
+    --border-color: #383838;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --font-family: 'Inter', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--primary-bg);
+    color: var(--text-light);
+}
+
+.appointments-container {
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.appointments-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.back-link {
+    background-color: var(--secondary-bg);
+    color: var(--text-dark);
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.back-link:hover {
+    color: var(--text-light);
+    background-color: #333;
+}
+.back-link i {
+    margin-right: 0.5rem;
+}
+
+.appointments-section {
+    margin-bottom: 3rem;
+}
+.appointments-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+}
+
+.appointment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.appointment-card {
+    background-color: var(--secondary-bg);
+    padding: 1.25rem 1.75rem;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) 1.5fr 1.5fr;
+    align-items: center;
+    gap: 1rem;
+    border-left: 5px solid var(--primary-accent);
+}
+
+.appointment-card.confirmed {
+    border-left-color: var(--success-color);
+}
+
+.info-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1rem;
+}
+.info-group i {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.appointment-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-size: 0.9rem;
+}
+.btn:hover {
+    opacity: 0.9;
+}
+.btn-accept {
+    background-color: var(--success-color);
+    color: white;
+}
+.btn-reject {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.status-tag {
+    color: var(--success-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-self: flex-end;
+}
+
+.no-appointments {
+    color: var(--text-dark);
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--secondary-bg);
+    border-radius: 12px;
+    border: 1px dashed var(--border-color);
+}
+
+/* Flash Messages */
+.flash-messages { margin-bottom: 1.5rem; }
+.flash { padding: 1rem; border-radius: 8px; font-weight: 500; }
+.flash-success { background-color: var(--success-color); color: white; }
+.flash-error { background-color: var(--danger-color); color: white; }
+
+/* --- START: RESPONSIVE FIXES --- */
+
+/* Add a max-width for better layout on very large screens */
+.appointments-container {
+    
+}
+
+/* For Tablets and smaller devices */
+@media (max-width: 768px) {
+    .appointments-container {
+        padding: 1.5rem;
+    }
+
+    .appointment-card {
+        grid-template-columns: 1fr; /* Stack all items into a single column */
+        gap: 1.2rem;
+    }
+
+    .appointment-actions,
+    .status-tag {
+        justify-self: start; /* Align actions and tags to the left */
+    }
+
+    .appointment-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Place approve/reject buttons side-by-side */
+    }
+}
+
+/* For smaller phones */
+@media (max-width: 480px) {
+    .appointments-container {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .appointments-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+/* --- END: RESPONSIVE FIXES --- */

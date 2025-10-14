@@ -1,0 +1,341 @@
+/* =================================================================== */
+/* A. DESIGN SYSTEM & FONT IMPORT */
+/* =================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-family: 'Inter', sans-serif;
+    --background-dark: #121212;
+    --surface-1: #1E1E1E;
+    --surface-2: #2a2a2a;
+    --primary-accent: #F7971E;
+    --text-main: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --border-color: #383838;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --action-blue: #ff9d00;
+}
+
+/* =================================================================== */
+/* B. CORE & PAGE LAYOUT */
+/* =================================================================== */
+body {
+    background-color: var(--background-dark);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    margin: 0;
+}
+
+.prescription-container {
+   
+    
+    padding: 2rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--text-main);
+}
+
+/* =================================================================== */
+/* C. LIST & CARD STYLES */
+/* =================================================================== */
+.item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.item-card {
+    background-color: var(--surface-1);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: grid;
+    grid-template-columns: 2fr 2fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.item-card:hover {
+    background-color: var(--surface-2);
+    border-color: var(--primary-accent);
+}
+
+.info-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.info-group strong {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.action-btn {
+    background-color: var(--action-blue);
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    justify-self: end;
+    transition: opacity 0.2s;
+}
+.action-btn:hover {
+    opacity: 0.9;
+}
+
+.no-items {
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--surface-1);
+    border: 1px dashed var(--border-color);
+    border-radius: 12px;
+}
+
+/* =================================================================== */
+/* D. PRESCRIPTION FORM STYLES */
+/* =================================================================== */
+.prescription-form {
+    background-color: var(--surface-1);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.medication-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.prescription-form input[type="text"],
+.prescription-form textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-family: var(--font-family);
+    font-size: 1rem;
+}
+
+.prescription-form textarea {
+    resize: vertical;
+    margin-top: 0.5rem;
+}
+
+.add-med-btn, .remove-med-btn, .submit-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.add-med-btn:hover, .remove-med-btn:hover, .submit-btn:hover {
+    opacity: 0.9;
+}
+
+.add-med-btn {
+    background-color: var(--surface-1);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    margin-top: 1rem;
+}
+
+.remove-med-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.submit-btn {
+    background-color: var(--success-color);
+    color: white;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+/* =================================================================== */
+/* E. VIEW PRESCRIPTION STYLES */
+/* =================================================================== */
+.prescription-details {
+    background-color: var(--surface-1);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.prescription-header p {
+    margin: 0.5rem 0;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.prescription-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.prescription-details th, .prescription-details td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.prescription-details thead {
+    background-color: var(--surface-2);
+}
+
+.prescription-details h2 {
+    margin-top: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* =================================================================== */
+/* F. RESPONSIVE DESIGN */
+/* =================================================================== */
+@media (max-width: 768px) {
+    .prescription-container {
+        max-width: none;
+        margin: 0;
+        padding: 1.5rem 1rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .item-card {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .action-btn {
+        justify-self: stretch;
+        text-align: center;
+    }
+
+    .medication-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+
+    .remove-med-btn {
+        justify-self: end;
+    }
+
+    /* --- RESPONSIVE TABLE FIX --- */
+    .table-container {
+        overflow-x: hidden;
+    }
+
+    .prescription-details table,
+    .prescription-details thead,
+    .prescription-details tbody,
+    .prescription-details th,
+    .prescription-details td,
+    .prescription-details tr {
+        display: block;
+    }
+
+    .prescription-details thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .prescription-details tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        background-color: var(--surface-2);
+    }
+
+    .prescription-details td {
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: right;
+        min-height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .prescription-details td:before {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        width: 45%;
+        padding-right: 1rem;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .prescription-details td:last-child {
+        border-bottom: 0;
+    }
+
+    .prescription-details td:nth-of-type(1):before { content: "Medication"; }
+    .prescription-details td:nth-of-type(2):before { content: "Dosage"; }
+    .prescription-details td:nth-of-type(3):before { content: "Frequency"; }
+    .prescription-details td:nth-of-type(4):before { content: "Duration"; }
+}
+/* --- START: CRITICAL MOBILE LAYOUT FIX --- */
+@media (max-width: 768px) {
+    .prescription-container {
+        max-width: none; /* Allows the container to be full-width */
+        margin: 0;
+        padding: 1.5rem 1rem;
+    }
+}
+/* --- END: CRITICAL MOBILE LAYOUT FIX --- */
