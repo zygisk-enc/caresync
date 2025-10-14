@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareSync Video Call</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/call_page.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+<body>
 <body>
     <div class="call-container">
         <div id="remote-video-container" class="video-container">
@@ -20,17 +22,33 @@
             <video id="localVideo" autoplay muted playsinline></video>
         </div>
 
-            <div class="controls-bar">
-                <button id="toggle-audio-btn" class="control-btn" title="Mute Audio" disabled>
-                    <i class="fas fa-microphone"></i>
-                </button>
-                <button id="toggle-video-btn" class="control-btn" title="Stop Video" disabled>
-                    <i class="fas fa-video"></i>
-                </button>
-                <button id="hangup-btn" class="control-btn hangup-btn" disabled>
-                    <i class="fas fa-phone-slash"></i>
-                </button>
-            </div>
+        <div class="controls-bar">
+            <button id="toggle-audio-btn" class="control-btn" title="Mute Audio" disabled>
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button id="toggle-video-btn" class="control-btn" title="Stop Video" disabled>
+                <i class="fas fa-video"></i>
+            </button>
+            
+            <button id="share-doc-btn" class="control-btn" title="Share Document" disabled>
+                <i class="fas fa-file-upload"></i>
+            </button>
+            
+            <button id="hangup-btn" class="control-btn hangup-btn" disabled>
+                <i class="fas fa-phone-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <input type="file" id="doc-upload-input" accept="image/*,.pdf" style="display: none;">
+
+    <div id="doc-viewer-modal" class="doc-viewer-backdrop hidden">
+        <div class="doc-viewer-content">
+            <button id="close-doc-viewer-btn" class="close-modal-btn">&times;</button>
+            <h3>Shared Document</h3>
+            <div id="doc-image-container">
+                </div>
+        </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>

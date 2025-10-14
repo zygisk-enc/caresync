@@ -16,3 +16,7 @@ medbot.db
 
 # migration cache files
 migrations/
+
+
+# Temporary file uploads
+temp_uploads/

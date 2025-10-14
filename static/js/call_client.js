@@ -8,72 +8,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusOverlay = document.getElementById('status-overlay');
     const statusText = document.getElementById('status-text');
     const hangupBtn = document.getElementById('hangup-btn');
-    // Add these lines after const hangupBtn = ...
     const localVideoContainer = document.getElementById('local-video-container');
     const toggleAudioBtn = document.getElementById('toggle-audio-btn');
     const toggleVideoBtn = document.getElementById('toggle-video-btn');
+    
+    // --- Element selections for document sharing ---
+    const shareDocBtn = document.getElementById('share-doc-btn');
+    const docUploadInput = document.getElementById('doc-upload-input');
+    const docViewerModal = document.getElementById('doc-viewer-modal');
+    const closeDocViewerBtn = document.getElementById('close-doc-viewer-btn');
+    const docImageContainer = document.getElementById('doc-image-container');
 
     let localStream;
     let peerConnection;
 
-    // --- Core WebRTC Logic ---
-
-    /**
-     * Creates and configures the RTCPeerConnection object.
-     * This is the heart of the WebRTC process.
-     */
+    // --- Core WebRTC Logic (UNCHANGED) ---
     const createPeerConnection = () => {
         peerConnection = new RTCPeerConnection(configuration);
 
-        // Add local media tracks to the connection to be sent to the peer
         localStream.getTracks().forEach(track => {
             peerConnection.addTrack(track, localStream);
         });
 
-        // Event handler: When an ICE candidate is generated, send it to the peer via the server
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
                 socket.emit('webrtc_signal', { call_id: callId, payload: { candidate: event.candidate } });
             }
         };
 
-        // Event handler: When a remote stream is received, display it in the remoteVideo element
         peerConnection.ontrack = (event) => {
             remoteVideo.srcObject = event.streams[0];
-            statusOverlay.style.display = 'none'; // Hide the "Connecting..." overlay
+            statusOverlay.style.display = 'none';
         };
     };
 
-    // --- Signaling Logic (Communication with Server) ---
-
-    /**
-     * Main handler for all signals received from the server.
-     * It processes offers, answers, and ICE candidates.
-     */
+    // --- Signaling Logic (UNCHANGED) ---
     socket.on('webrtc_signal', async ({ payload }) => {
-        if (payload.sdp) { // This is an SDP offer or answer
+        if (payload.sdp) {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(payload.sdp));
 
-            // If we received an offer, we must create an answer
             if (payload.sdp.type === 'offer') {
                 const answer = await peerConnection.createAnswer();
                 await peerConnection.setLocalDescription(answer);
                 socket.emit('webrtc_signal', { call_id: callId, payload: { sdp: peerConnection.localDescription } });
             }
-        } else if (payload.candidate) { // This is an ICE candidate
+        } else if (payload.candidate) {
             await peerConnection.addIceCandidate(new RTCIceCandidate(payload.candidate));
         }
     });
 
-    /**
-     * Fired when the server confirms both peers are in the room.
-     * The designated initiator will start the call by creating an offer.
-     */
     socket.on('peers_ready', (data) => {
         createPeerConnection();
         hangupBtn.disabled = false;
         toggleAudioBtn.disabled = false;
         toggleVideoBtn.disabled = false;
+        shareDocBtn.disabled = false; // Enable the share button
         
         if (data.initiator_sid === socket.id) {
             statusText.textContent = 'Peer found. Creating offer...';
@@ -87,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
             statusText.textContent = 'Peer found. Waiting for offer...';
         }
     });
-    // --- Mute/Unmute Functions ---
+
+    // --- Mute/Unmute Functions (UNCHANGED) ---
     const toggleAudio = () => {
         const audioTrack = localStream.getAudioTracks()[0];
         if (audioTrack) {
             audioTrack.enabled = !audioTrack.enabled;
-
             const icon = toggleAudioBtn.querySelector('i');
             if (audioTrack.enabled) {
                 icon.classList.remove('fa-microphone-slash');
@@ -112,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const videoTrack = localStream.getVideoTracks()[0];
         if (videoTrack) {
             videoTrack.enabled = !videoTrack.enabled;
-
             const icon = toggleVideoBtn.querySelector('i');
             if (videoTrack.enabled) {
                 icon.classList.remove('fa-video-slash');
@@ -130,11 +118,97 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- Cleanup and Initialization ---
+    // --- Document Sharing Logic ---
 
-    /**
-     * Gracefully closes the connection and cleans up resources.
-     */
+    // 1. Trigger file input (UNCHANGED)
+    shareDocBtn.addEventListener('click', () => {
+        docUploadInput.click();
+    });
+
+    // 2. Handle the file upload process (MODIFIED FOR "OKAY" BUTTON)
+    docUploadInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const loader = statusOverlay.querySelector('.loader');
+        
+        if (loader) loader.style.display = 'block';
+        statusText.textContent = 'Uploading and securing document...';
+        statusOverlay.style.display = 'flex';
+
+        const formData = new FormData();
+        formData.append('document', file);
+
+        try {
+            const response = await fetch(`/call/${callId}/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Upload failed on server.');
+            }
+
+            const data = await response.json();
+            socket.emit('share_document', { call_id: callId, urls: data.urls });
+            
+            statusText.textContent = 'Document sent successfully!';
+            
+            setTimeout(() => {
+                if (statusText.textContent === 'Document sent successfully!') {
+                    statusOverlay.style.display = 'none';
+                }
+            }, 2000);
+
+        } catch (error) {
+            console.error('Upload error:', error);
+            
+            if (loader) loader.style.display = 'none';
+            statusText.textContent = 'Document upload failed.';
+
+            const okButton = document.createElement('button');
+            okButton.textContent = 'Okay';
+            okButton.className = 'status-ok-btn';
+
+            okButton.addEventListener('click', () => {
+                statusOverlay.style.display = 'none';
+                okButton.remove();
+                if (loader) loader.style.display = 'block';
+            });
+
+            statusOverlay.appendChild(okButton);
+
+        } finally {
+            docUploadInput.value = '';
+        }
+    });
+
+    // 3. Listen for a shared document (UNCHANGED)
+    socket.on('document_shared', (data) => {
+        const { urls } = data;
+        if (urls && urls.length > 0) {
+            docImageContainer.innerHTML = '';
+            urls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                docImageContainer.appendChild(img);
+            });
+            docViewerModal.classList.remove('hidden');
+        }
+    });
+
+    // 4. Handle modal closing and screenshot deterrence (UNCHANGED)
+    closeDocViewerBtn.addEventListener('click', () => {
+        docViewerModal.classList.add('hidden');
+        docImageContainer.innerHTML = '';
+    });
+
+    docImageContainer.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+    });
+    
+    // --- Cleanup and Initialization (UNCHANGED) ---
     const closeCall = () => {
         socket.emit('leave_call_room', { call_id: callId });
         if (peerConnection) {
@@ -145,17 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
             localStream.getTracks().forEach(track => track.stop());
         }
         statusText.textContent = 'Call ended.';
-        statusOverlay.style.display = 'flex'; // Show overlay with "Call ended" message
+        statusOverlay.style.display = 'flex';
         setTimeout(() => window.close(), 2000);
     };
 
     hangupBtn.addEventListener('click', closeCall);
-    window.addEventListener('beforeunload', closeCall); // Handle closing the tab
+    window.addEventListener('beforeunload', closeCall);
     socket.on('peer_left', closeCall);
 
-    /**
-     * Initializes the entire call process.
-     */
     const initialize = async () => {
         try {
             statusText.textContent = 'Getting camera and microphone...';
@@ -164,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleAudioBtn.addEventListener('click', toggleAudio);
             toggleVideoBtn.addEventListener('click', toggleVideo);
             
-            // Announce readiness to the server
             socket.emit('join_call_room', { call_id: callId });
             statusText.textContent = "Waiting for peer to join...";
         } catch (error) {

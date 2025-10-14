@@ -4,8 +4,12 @@ from flask import Flask, session, request
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+import glob 
 from apscheduler.schedulers.background import BackgroundScheduler
-
+import os
+import atexit
+import glob # <-- ADD THIS 
+from flask import Flask, session, request, current_app
 load_dotenv()
 
 from extensions import db, mail
@@ -107,6 +111,41 @@ scheduler.add_job(func=send_call_reminders, args=[app], trigger="interval", seco
 scheduler.add_job(func=send_medication_reminders, args=[app], trigger="interval", seconds=60)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
+
+
+@socketio.on('share_document')
+def handle_share_document(data):
+    call_id = data.get('call_id')
+    if not call_id: return
+    room = f"call_{call_id}"
+    # Simply relay the event to the other person in the room
+    emit('document_shared', {'urls': data.get('urls')}, to=room, include_self=False)
+
+@socketio.on('leave_call_room')
+def handle_leave_call_room(data):
+    call_id = data.get('call_id')
+    if not call_id: return
+    room = f"call_{call_id}"
+    leave_room(room)
+    emit('peer_left', {'sid': request.sid}, to=room)
+
+    # This 'with' block is essential for Socket.IO handlers
+    with app.app_context():
+        # Check if the room is now empty to perform cleanup
+        clients_in_room = list(socketio.server.manager.get_participants(request.namespace, room))
+        if len(clients_in_room) == 0:
+            temp_folder = os.path.join(current_app.root_path, 'temp_uploads')
+            
+            # Find all files matching the pattern for this call
+            files_to_delete = glob.glob(os.path.join(temp_folder, f"call_{call_id}_*.png"))
+            
+            for f in files_to_delete:
+                try:
+                    os.remove(f)
+                    print(f"--- CLEANUP: Deleted temporary file: {f} ---")
+                except OSError as e:
+                    print(f"--- ERROR: Failed to delete file {f}: {e} ---")
+
 
 if __name__ == '__main__':
     socketio.run(
