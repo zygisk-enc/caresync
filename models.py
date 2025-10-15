@@ -154,3 +154,22 @@ class Reminder(db.Model):
     custom_message = db.Column(db.Text, nullable=True)
     is_sent = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, server_default=func.now())
+
+class PromptHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Can be for a user
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=True) # Or for a doctor
+    
+    prompt_text = db.Column(db.Text, nullable=False)
+    response_text = db.Column(db.Text, nullable=False)
+    
+    # Store the path to the uploaded image if any
+    image_url = db.Column(db.String(255), nullable=True) 
+    
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    user = db.relationship('User', backref='prompt_history', foreign_keys=[user_id])
+    doctor = db.relationship('Doctor', backref='doctor_prompt_history', foreign_keys=[doctor_id])
+
+    def __repr__(self):
+        return f"<PromptHistory {self.id} User:{self.user_id} Doctor:{self.doctor_id}>"

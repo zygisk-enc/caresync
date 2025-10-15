@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Health Dashboard - CareSync</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body data-user-id="{{ user.id }}">
+    <div class="dashboard-container">
+        
+        <header class="dashboard-header">
+            <div>
+                <h1>Health Dashboard</h1>
+                <p class="subtitle">A summary of your medical events and interactions.</p>
+            </div>
+            <a href="{{ url_for('main.home') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </header>
+
+        <main class="dashboard-grid">
+                
+            <a href="{{ url_for('main.appointment_status') }}" class="widget-link">
+                <div class="widget kpi-widget">
+                    <div class="kpi-icon icon-appointments">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Total Appointments</span>
+                        <span id="kpi-total-appointments" class="kpi-value">...</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{{ url_for('video_call.user_call_status') }}" class="widget-link">
+                <div class="widget kpi-widget">
+                    <div class="kpi-icon icon-calls">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Total Video Calls</span>
+                        <span id="kpi-total-calls" class="kpi-value">...</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="{{ url_for('prescription.user_eprescriptions_view_only') }}" class="widget-link">
+                <div class="widget kpi-widget">
+                    <div class="kpi-icon icon-prescriptions">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Total Prescriptions</span>
+                        <span id="kpi-total-prescriptions" class="kpi-value">...</span>
+                    </div>
+                </div>
+            </a>
+            
+            <div class="widget chart-widget">
+                <div class="widget-header">
+                    <h3>Event Status Overview</h3>
+                </div>
+                <div class="chart-and-legend-container">
+                    <div class="chart-container">
+                        <canvas id="health-status-chart"></canvas>
+                    </div>
+                    <div id="chart-legend-container" class="chart-legend">
+                        </div>
+                </div>
+            </div>
+
+            <div class="widget prompt-history-widget">
+                <div class="widget-header">
+                    <h3>Recent AI Conversations</h3>
+                </div>
+                <div id="prompt-history-container" class="prompt-history-container">
+                    
+                    <div id="prompt-loader" class="loader-container">
+                        <p>Loading conversation history...</p>
+                    </div>
+
+                    <div id="no-prompts-message" class="no-items-message hidden">
+                        <i class="fas fa-comment-slash"></i>
+                        <p>You have not had any AI conversations yet.</p>
+                    </div>
+
+                    </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

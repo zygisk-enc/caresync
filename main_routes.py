@@ -3,20 +3,28 @@ import uuid
 import base64
 import io
 from datetime import datetime
-
 from flask import (
     Blueprint, render_template, session, redirect, url_for,
     request, jsonify, current_app, flash, abort, send_from_directory
 )
-from sqlalchemy import or_
+from werkzeug.utils import secure_filename
 import google.generativeai as genai
 from PIL import Image, ImageDraw, ImageFont
 from pdf2image import convert_from_bytes
 
 from extensions import db
-from models import Appointment, Doctor, User, Notification, VideoCall
+from models import Appointment, Doctor, User, Notification, VideoCall, PromptHistory
 
 main = Blueprint('main', __name__)
+
+# --- Configuration for AI prompt image uploads ---
+UPLOAD_FOLDER = 'static/uploads/ai_prompts'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# --- CORE ROUTES ---
 
 @main.route('/')
 def home():
@@ -32,64 +40,73 @@ def handle_prompt():
     data = request.get_json()
     prompt_text = data.get('prompt')
     base64_images = data.get('images', [])
-
     api_key = current_app.config.get('GOOGLE_API_KEY')
 
     if not api_key:
-        return jsonify({'error': 'Google API key is not configured on the server.'}), 500
+        return jsonify({'error': 'Google API key is not configured.'}), 500
     if not prompt_text and not base64_images:
         return jsonify({'error': 'A text prompt or an image is required.'}), 400
 
+    image_url_for_db = None
     try:
         genai.configure(api_key=api_key)
+        
+        # --- Prepare content for the AI model ---
+        content_parts = []
+        system_instruction = (
+            "You are MediBot, a helpful AI medical assistant. "
+            "Your primary role is to answer only medical, health, and wellness-related questions. "
+            "You must strictly and politely refuse to answer any questions that are not related to these topics."
+        )
+        content_parts.append(system_instruction)
 
-        if not base64_images:
-            model = genai.GenerativeModel("gemini-2.5-flash-lite")
-            
-            system_instruction = (
-                "You are MediBot, a helpful AI medical assistant. "
-                "Your primary role is to answer only medical, health, and wellness-related questions. "
-                "You must strictly and politely refuse to answer any questions that are not related to these topics. "
-                "If asked a non-medical question, you must decline by stating your purpose, for example: "
-                "'As a medical assistant, I can only answer questions about health and medicine.'"
-            )
-            
-            full_prompt = f"{system_instruction}\n\nUser Question: {prompt_text}"
-            response = model.generate_content(full_prompt)
+        if prompt_text:
+            content_parts.append(prompt_text)
 
-        else:
-            model = genai.GenerativeModel("gemini-2.5-flash")
+        # --- Process and save images ---
+        if base64_images:
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+            user_id = session.get('user_id')
+            doctor_id = session.get('doctor_id')
             
-            system_instruction = (
-                "You are MediBot, a helpful AI medical assistant. Your primary role is to answer "
-                "only medical, health, and wellness-related questions, especially in relation to any "
-                "images provided. You must strictly and politely refuse to answer any questions that "
-                "are not related to these topics."
-            )
+            # For this feature, we'll only process and save the first image.
+            b64_string = base64_images[0]
+            image_bytes = base64.b64decode(b64_string)
+            img = Image.open(io.BytesIO(image_bytes))
+            content_parts.append(img)
+            
+            # Save the image to a file to get a URL for the database
+            filename = secure_filename(f"{user_id or doctor_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.webp")
+            filepath = os.path.join(UPLOAD_FOLDER, filename)
+            img.save(filepath, 'WEBP') # Save in a modern format
+            image_url_for_db = url_for('static', filename=f'uploads/ai_prompts/{filename}')
 
-            content_parts = [system_instruction]
-            if prompt_text:
-                content_parts.append(prompt_text)
+        # --- Call the AI model ---
+        # FIX: Swapped the model names to select the correct one.
+        model_name = "gemini-2.5-flash-lite" if base64_images else "gemini-2.5-flash"
+        model = genai.GenerativeModel(model_name)
+        response = model.generate_content(content_parts)
+        ai_response_text = response.text
 
-            for b64_string in base64_images:
-                try:
-                    image_bytes = base64.b64decode(b64_string)
-                    img = Image.open(io.BytesIO(image_bytes))
-                    content_parts.append(img)
-                except Exception as e:
-                    current_app.logger.error(f"Could not process a Base64 image: {e}")
-                    continue
-            
-            if len(content_parts) <= (1 + (1 if prompt_text else 0)):
-                return jsonify({'error': 'Invalid or corrupted image data provided.'}), 400
-            
-            response = model.generate_content(content_parts)
-            
-        return jsonify({'response': response.text})
+        # --- Save the interaction to the database ---
+        new_prompt = PromptHistory(
+            user_id=session.get('user_id'),
+            doctor_id=session.get('doctor_id'),
+            prompt_text=prompt_text if prompt_text else "Image-based query",
+            response_text=ai_response_text,
+            image_url=image_url_for_db
+        )
+        db.session.add(new_prompt)
+        db.session.commit()
+
+        return jsonify({'response': ai_response_text})
         
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return jsonify({'error': 'An error occurred while communicating with the AI model.'}), 500
+        current_app.logger.error(f"Error in /prompt route: {e}")
+        db.session.rollback()
+        return jsonify({'error': 'An error occurred while processing your request.'}), 500
+
+# --- ALL OTHER EXISTING ROUTES ---
 
 @main.route('/call/<int:call_id>')
 def call_page(call_id):
@@ -172,10 +189,6 @@ def cancel_appointment(appointment_id):
     db.session.commit()
     return jsonify({'message': 'Appointment successfully cancelled.'}), 200
 
-# In main_routes.py
-
-# In main_routes.py, find and replace your existing handle_secure_upload function:
-
 @main.route('/call/<int:call_id>/upload', methods=['POST'])
 def handle_secure_upload(call_id):
     temp_folder = os.path.join(current_app.root_path, 'temp_uploads')
@@ -205,7 +218,6 @@ def handle_secure_upload(call_id):
         viewer = User.query.get(call.user_id)
         viewer_name = viewer.full_name
 
-    # MODIFIED: Watermark text for multiple diagonals
     watermark_base_text = f"Viewed by {viewer_name} {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     
     processed_urls = []
@@ -225,49 +237,35 @@ def handle_secure_upload(call_id):
             draw = ImageDraw.Draw(txt_layer)
 
             try:
-                # Attempt to load a common bold font, adjust size for better visibility
-                font_size = int(img_width / 15) # Dynamic font size based on image width
-                font = ImageFont.truetype("arialbd.ttf", font_size) # Arial Bold
+                font_size = int(img_width / 15)
+                font = ImageFont.truetype("arialbd.ttf", font_size)
             except IOError:
-                font = ImageFont.load_default() # Fallback
+                font = ImageFont.load_default()
 
-            # MODIFIED: Darker grey (RGB 50, 50, 50) with some transparency (alpha 120-150 for good visibility)
-            # Alpha value depends on how subtle/prominent you want it. 120-150 is a good range.
             watermark_fill = (50, 50, 50, 140) 
 
-            # Calculate text size once to help with positioning
             bbox = draw.textbbox((0, 0), watermark_base_text, font=font)
             text_width = bbox[2] - bbox[0]
             text_height = bbox[3] - bbox[1]
 
-            # MODIFIED: Define multiple positions for diagonal watermarks
-            # This creates a grid-like diagonal pattern
             positions = [
-                (-text_width / 2, img_height / 4 - text_height / 2), # Top-left quadrant
-                (img_width / 4, -text_height / 2),                   # Top-center (start off-screen for effect)
-                (img_width / 2 - text_width / 2, img_height / 2 - text_height / 2), # Center
-                (img_width * 3 / 4, img_height - text_height * 0.75),# Bottom-right (start off-screen for effect)
-                (img_width - text_width / 2, img_height / 4),       # Top-right quadrant
-                (img_width / 2, img_height * 3 / 4 - text_height / 2), # Bottom-center quadrant
-                (-text_width / 2, img_height * 3 / 4),               # Bottom-left quadrant
-                # Add more if you want a denser pattern
+                (-text_width / 2, img_height / 4 - text_height / 2),
+                (img_width / 4, -text_height / 2),
+                (img_width / 2 - text_width / 2, img_height / 2 - text_height / 2),
+                (img_width * 3 / 4, img_height - text_height * 0.75),
+                (img_width - text_width / 2, img_height / 4),
+                (img_width / 2, img_height * 3 / 4 - text_height / 2),
+                (-text_width / 2, img_height * 3 / 4),
             ]
 
             for x, y in positions:
-                # Rotate the text for diagonal effect
-                # Create a temporary image for the rotated text
                 temp_text_img = Image.new('RGBA', (text_width + 50, text_height + 50), (255, 255, 255, 0))
                 temp_draw = ImageDraw.Draw(temp_text_img)
                 temp_draw.text((0, 0), watermark_base_text, font=font, fill=watermark_fill)
                 
-                # Rotate by -45 degrees (adjust angle as needed)
-                rotated_text_img = temp_text_img.rotate(45, expand=1) # expand=1 ensures full text is visible after rotation
+                rotated_text_img = temp_text_img.rotate(45, expand=1)
                 
-                # Paste the rotated text onto the main text layer, adjusting for rotation expansion
-                # We need to calculate the new top-left corner after rotation expansion
                 rotated_width, rotated_height = rotated_text_img.size
-                
-                # Adjust paste position to roughly center the rotated text around original (x,y)
                 paste_x = int(x - (rotated_width - text_width) / 2)
                 paste_y = int(y - (rotated_height - text_height) / 2)
 
@@ -294,7 +292,6 @@ def serve_temp_file(filename):
         abort(404)
     return send_from_directory(temp_folder, filename)
 
-# --- Utility and PWA routes ---
 @main.route('/picker/map')
 def picker_map():
     return render_template('picker_map.html')
@@ -317,4 +314,4 @@ def serve_manifest():
 
 @main.route('/sw.js')
 def serve_sw():
-    return send_from_directory('static', 'sw.js')
+    return send_from_directory(current_app.root_path, 'sw.js')
