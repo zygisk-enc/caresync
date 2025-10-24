@@ -20,3 +20,6 @@ migrations/
 
 # Temporary file uploads
 temp_uploads/
+
+# Ignore the local static uploads folder containing user/doctor files
+static/uploads/

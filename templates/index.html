@@ -65,7 +65,13 @@
         <main>
             <div class="main-content">
                 <section class="welcome-section">
-                    <h2 class="gradient-text">Hello, {{ session.user_name }}</h2>
+                    <h2 class="gradient-text">Hello, 
+                    {% if session['doctor_id'] %}
+                        Dr. {{ session.user_name }}
+                    {% else %}
+                        {{ session.user_name }}
+                    {% endif %}
+                    </h2>
                     {% if session['doctor_id'] %}
                         <h1>How can CareSync assist your practice today?</h1>
                     {% else %}
@@ -81,7 +87,7 @@
                             
                             <div id="selected-image-preview-container"></div>
                             <input type="file" id="image-upload-input" multiple accept="image/*" style="display: none;">
-                            <textarea id="ai-input" placeholder="Ask MediBot anything, or upload an image..." rows="1"></textarea>
+                            <textarea id="ai-input" placeholder="Ask CareSync anything, or upload an image..." rows="1"></textarea>
                             <div class="bottom-icons">
                                 <i class="fas fa-paperclip" id="attach-btn" title="Attach Images"></i>
                                 
@@ -134,13 +140,16 @@
                             <i class="fas fa-bell"></i>
                             <span>Medication Reminders</span>
                         </a>
+                            <a href="https://dailymed.nlm.nih.gov/dailymed/" target="_blank" class="quick-action-btn">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>DailyMed Search</span> </a>
                         {% endif %}
                 </section>
                 </div>
         </main>
         
         <footer>
-            <a href="#">About XIGmed</a>
+            <a href="#">About CareSync</a>
             <a href="#">Terms</a>
             <a href="#">Privacy</a>
         </footer>
