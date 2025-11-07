@@ -1,0 +1,42 @@
+# Core framework
+Flask==3.0.3
+
+# Real-time features
+Flask-SocketIO==5.3.6
+python-socketio==5.11.3
+python-engineio==4.9.1
+
+# Environment management
+python-dotenv==1.0.1
+
+# Security / hashing / authentication helpers
+Werkzeug==3.0.3
+
+# For database handling (if you use SQLAlchemy)
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.34
+
+# For handling forms, file uploads, etc. (optional but common)
+Flask-WTF==1.2.1
+
+# For CORS (if frontend is separate)
+Flask-Cors==4.0.1
+
+# For scheduling background tasks (if used for reminders)
+Flask-APScheduler==1.13.1
+
+# If you use image uploads / processing
+Pillow==10.3.0
+
+# Optional: For using requests with APIs like Gemini
+requests==2.32.3
+
+# Optional: For better CLI and logging
+click==8.1.7
+
+# If you ever use SSL via Werkzeug (already supported but safe to include)
+cryptography==43.0.1
+Flask-Migrate alembic
+Flask-Mail
+google-generativeai
+pdf2image

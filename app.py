@@ -8,8 +8,7 @@ from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 import os
 from dotenv import load_dotenv
-
-load_dotenv()  # make sure environment vars are loaded
+ # make sure environment vars are loaded
 
 load_dotenv()
 
@@ -133,16 +132,29 @@ def handle_send_message(data):
 
 # --- Scheduler Setup ---
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=send_call_reminders, args=[app], trigger="interval", seconds=60)
-scheduler.add_job(func=send_medication_reminders, args=[app], trigger="interval", seconds=60)
-scheduler.start()
-atexit.register(lambda: scheduler.shutdown())
 
-
+def start_jobs(the_app):
+    # register jobs once
+    scheduler.add_job(send_call_reminders, "interval", seconds=60, args=[the_app])
+    scheduler.add_job(send_medication_reminders, "interval", seconds=60, args=[the_app])
+    scheduler.start()
+    atexit.register(lambda: scheduler.shutdown(wait=False))
 
 if __name__ == '__main__':
+    from dotenv import load_dotenv
+    load_dotenv()  # load .env once at runtime
+
+    # only start jobs in the reloader's main process
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        start_jobs(app)
+
     certfile = os.getenv('SSL_CERTFILE')
     keyfile = os.getenv('SSL_KEYFILE')
+
+    # Flask expects ssl_context, not certfile/keyfile
+    ssl_context = None
+    if certfile and keyfile:
+        ssl_context = (certfile, keyfile)  # Werkzeug will load these
 
     socketio.run(
         app,
@@ -150,8 +162,7 @@ if __name__ == '__main__':
         port=5000,
         debug=True,
         allow_unsafe_werkzeug=True,
-        certfile=certfile,
-        keyfile=keyfile
+        ssl_context=ssl_context
     )
 
 
