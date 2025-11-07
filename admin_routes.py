@@ -1,5 +1,6 @@
 import os
 from functools import wraps
+from dotenv import load_dotenv
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
     session, flash, current_app
@@ -7,7 +8,8 @@ from flask import (
 from models import db, Doctor
 
 # Use a hard-to-guess prefix for security
-admin = Blueprint('admin', __name__, url_prefix='/a8b1c2d3-e4f5-a6b7-c8d9-e0f1a2b3c4d5')
+admin_prefix = os.getenv('ADMIN_URL_PREFIX', '/admin')
+admin = Blueprint('admin', __name__, url_prefix=admin_prefix)
 
 def admin_required(f):
     @wraps(f)

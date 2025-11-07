@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F7971E" />
+  <title>Terms of Service</title>
+  <meta name="description" content="CareSync Terms of Service (academic project)." />
+  <meta name="robots" content="noindex, follow" />
+
+  <style>
+    :root{
+      --bg:#0b0b0b;           /* page background */
+      --surface:#121212;      /* cards/containers */
+      --border:#232323;       /* borders */
+      --text:#e7e7e7;         /* primary text */
+      --muted:#b3b3b3;        /* secondary text */
+      --primary:#F7971E;      /* CareSync accent */
+      --accent:#4f5bd5;       /* secondary accent */
+      --shadow:0 8px 24px rgba(0,0,0,.45);
+      --radius:16px;
+      --maxw:980px;
+      --line:1.75;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f9fc; --surface:#ffffff; --border:#e6ebf2;
+        --text:#111213; --muted:#4b5563;
+        --primary:#F7971E; --accent:#4f5bd5;
+      }
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(79,91,213,.08), transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, rgba(247,151,30,.08), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      font:16px/var(--line) system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .container{max-width:var(--maxw); margin:0 auto; padding:24px clamp(16px,3vw,32px)}
+
+    /* Header */
+    .site-header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter:saturate(130%) blur(10px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom:1px solid var(--border);
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:36px; height:36px; border-radius:10px;
+      background:linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow:var(--shadow);
+    }
+    .brand h1{font-size:18px; margin:0; letter-spacing:.2px}
+    .breadcrumbs{font-size:13px; color:var(--muted); margin-top:6px}
+
+    /* Back link */
+    .back-link{
+      display:inline-flex; align-items:center; gap:.5rem;
+      color:var(--muted); text-decoration:none;
+      font-size:.95rem; margin:12px 0 14px;
+      border:1px solid var(--border); border-radius:10px;
+      padding:6px 10px; background:rgba(255,255,255,.03);
+    }
+    .back-link:hover{color:#ddd; background:rgba(255,255,255,.06)}
+
+    /* Card */
+    .card{
+      background:linear-gradient(180deg, color-mix(in srgb, var(--surface) 96%, transparent), var(--surface));
+      border:1px solid var(--border); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+    .card-header{
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      gap:12px; padding:22px 22px 12px 22px; border-bottom:1px solid var(--border);
+    }
+    .title{font-size:clamp(22px,3vw,30px); margin:0}
+    .subtitle{color:var(--muted); font-size:14px; margin:6px 0 0}
+
+    .content{padding:8px 22px 26px}
+    h2{font-size:clamp(18px,2.6vw,24px); margin:26px 0 8px}
+    .section{scroll-margin-top:110px}
+    .lead{
+      margin-top:10px; background:color-mix(in srgb, var(--surface) 90%, var(--bg));
+      border:1px solid var(--border); padding:14px 16px; border-radius:12px; color:var(--muted); font-size:15px;
+    }
+    ul,ol{padding-left:20px} li{margin:6px 0}
+    .muted{color:var(--muted)}
+    .meta{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13px; color:var(--muted)}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+      background: color-mix(in srgb, var(--accent) 14%, var(--surface)); border:1px solid var(--border);
+      font-size:12px; color:var(--muted)
+    }
+
+    /* Footer & top */
+    .site-footer{color:var(--muted); font-size:13px; text-align:center; padding:24px}
+    .to-top{
+      position:fixed; right:16px; bottom:16px; z-index:20;
+      display:inline-flex; align-items:center; justify-content:center;
+      width:44px; height:44px; border-radius:12px; border:1px solid var(--border);
+      background:var(--surface); box-shadow:var(--shadow); color:var(--text);
+      cursor:pointer; opacity:.85; transform:translateY(8px); transition:.2s ease;
+    }
+    .to-top:hover{opacity:1; transform:translateY(0)}
+
+    @media (max-width:720px){
+      .breadcrumbs{display:none}
+      .card-header{padding:18px}
+      .content{padding:10px 18px 22px}
+      .to-top{right:12px; bottom:12px}
+    }
+
+    @media print{
+      .site-header, .to-top, .back-link{display:none!important}
+      body{background:#fff; color:#000}
+      .card{border:none; box-shadow:none}
+      a{color:#000; text-decoration:none}
+    }
+  </style>
+
+  <script>
+    // Smooth-scroll for in-page anchors (if any)
+    document.addEventListener('click', function(e){
+      const a = e.target.closest('a[href^="#"]');
+      if(!a) return;
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if(el){
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        history.replaceState(null,'','#'+id);
+      }
+    });
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Terms of Service</h1>
+          <div class="breadcrumbs">Home / Legal / Terms</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Back to Home uses a stable path to avoid endpoint errors -->
+    <a href="/" class="back-link" aria-label="Back to Home">← Back to Home</a>
+
+    <article class="card" role="document" aria-labelledby="page-title">
+      <div class="card-header">
+        <div>
+          <h2 id="page-title" class="title">Terms of Service</h2>
+          <p class="subtitle">Straightforward terms for an academic project.</p>
+        </div>
+        <div class="meta">
+          <span class="chip">Last updated: <time datetime="2025-11-08">November 8, 2025</time></span>
+          <span class="chip">Project: <span class="muted">CareSync (Academic)</span></span>
+        </div>
+      </div>
+
+      <div class="content">
+        <p class="lead">CareSync is a student project for demonstration and evaluation. It is not a medical device and should not be used for clinical decisions.</p>
+
+        <section id="acceptance" class="section">
+          <h2>1. Acceptance</h2>
+          <p>By using CareSync, you agree to these Terms and our Privacy Policy</a>. If you do not agree, do not use the service.</p>
+        </section>
+
+        <section id="eligibility" class="section">
+          <h2>2. Eligibility</h2>
+          <ul>
+            <li>You are the age of majority in your region or have appropriate permission.</li>
+            <li>If using CareSync on behalf of an institution, you confirm you have authority to do so.</li>
+          </ul>
+        </section>
+
+        <section id="accounts" class="section">
+          <h2>3. Accounts & Security</h2>
+          <ul>
+            <li>Provide accurate information and keep it updated.</li>
+            <li>You are responsible for activity on your account and safeguarding credentials.</li>
+            <li>Report suspected unauthorized access promptly.</li>
+          </ul>
+        </section>
+
+        <section id="use" class="section">
+          <h2>4. Acceptable Use</h2>
+          <ul>
+            <li>No unlawful activities, harassment, or rights infringement.</li>
+            <li>Do not disrupt, probe, or reverse engineer the service.</li>
+            <li>No malware or harmful content.</li>
+            <li>Do not submit real-world PHI or confidential medical records.</li>
+          </ul>
+        </section>
+
+        <section id="content" class="section">
+          <h2>5. Your Content</h2>
+          <p>You own your content. You grant a limited license for us to host and display it to operate CareSync. You must have the rights to anything you submit.</p>
+        </section>
+
+        <section id="thirdparty" class="section">
+          <h2>6. Third-Party Services</h2>
+          <p>CareSync may use or link to third-party tools (for example, maps or AI APIs). Their terms and policies apply; we are not responsible for their content.</p>
+        </section>
+
+        <section id="disclaimers" class="section">
+          <h2>7. Disclaimers</h2>
+          <p>CareSync is provided “as is” for educational use. We do not guarantee accuracy, availability, or fitness for any purpose. Do not use it for medical advice or emergencies.</p>
+        </section>
+
+        <section id="liability" class="section">
+          <h2>8. Limitation of Liability</h2>
+          <p>To the extent allowed by law, we are not liable for indirect or consequential losses arising from use of CareSync.</p>
+        </section>
+
+        <section id="termination" class="section">
+          <h2>9. Suspension & Termination</h2>
+          <p>We may suspend or terminate access for misuse or to protect the project and its users.</p>
+        </section>
+
+        <section id="changes" class="section">
+          <h2>10. Changes</h2>
+          <p>We may update these Terms periodically. Continued use after updates means you accept the revised Terms.</p>
+        </section>
+
+        <section id="contact" class="section">
+          <h2>11. Contact</h2>
+                <p>Questions about privacy or data? Email
+                <a href="mailto:chinmai.enc@gmail.com">chinmai.enc@gmail.com</a>.
+                </p>
+
+        </section>
+      </div>
+    </article>
+  </main>
+
+  <button class="to-top" aria-label="Back to top" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+  <footer class="site-footer">
+    © <span id="year"></span> CareSync (Academic). All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

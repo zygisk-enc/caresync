@@ -9,10 +9,10 @@ __pycache__/
 .env
 
 # Database file (contains user data)
-medbot.db
+caresync.db
 
 # Local SSL certificate files
-*.pem
+certs/*.pem
 
 # migration cache files
 migrations/

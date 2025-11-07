@@ -6,6 +6,10 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # make sure environment vars are loaded
 
 load_dotenv()
 
@@ -19,7 +23,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # --- App Configuration ---
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['GOOGLE_API_KEY'] = os.getenv('GOOGLE_API_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'medbot.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'caresync.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
@@ -134,15 +138,20 @@ scheduler.add_job(func=send_medication_reminders, args=[app], trigger="interval"
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
-# --- Application Runner ---
+
+
 if __name__ == '__main__':
+    certfile = os.getenv('SSL_CERTFILE')
+    keyfile = os.getenv('SSL_KEYFILE')
+
     socketio.run(
         app,
         host='0.0.0.0',
         port=5000,
         debug=True,
         allow_unsafe_werkzeug=True,
-        certfile='192.168.9.151.pem',
-        keyfile='192.168.9.151-key.pem'
+        certfile=certfile,
+        keyfile=keyfile
     )
+
 

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy - CareSync</title>
+
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/icons/logo.png') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/icons/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <meta name="robots" content="noindex, follow">
+  <meta name="description" content="CareSync Privacy Policy for a student project: what we collect, how we use it, and your choices.">
+
+  <style>
+    :root{
+      --bg:#0b0b0b; --surface:#121212; --border:#222;
+      --text:#e6e6e6; --muted:#b0b0b0;
+      --primary:#F7971E; --accent:#4f5bd5;
+      --radius:14px; --shadow:0 10px 28px rgba(0,0,0,.35);
+      --maxw:980px; --line:1.7;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f9fc; --surface:#fff; --border:#e9eef4;
+        --text:#0f1720; --muted:#4b5563; --primary:#F7971E; --accent:#4f5bd5;
+      }
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font:16px/var(--line) system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .legal-container{
+      max-width:var(--maxw); margin:3rem auto; padding:2rem;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--surface);
+      border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
+    }
+
+    .header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1.25rem;
+    }
+    .title{margin:0; font-size:clamp(1.6rem,2.6vw,2.2rem)}
+    .subtitle{margin:.25rem 0 0; color:var(--muted); font-size:.98rem}
+    .meta{display:flex; gap:10px; flex-wrap:wrap; font-size:.85rem; color:var(--muted)}
+    .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:rgba(79,91,213,.08); color:var(--muted)}
+
+    .back-link{color:var(--muted); display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; margin-bottom:1rem}
+    .back-link:hover{color:#e0e0e0}
+
+    .toc{margin:.25rem 0 1.25rem; padding:.75rem; border-radius:12px; background:rgba(255,255,255,.02); border:1px solid var(--border)}
+    .toc-grid{display:grid; gap:8px; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))}
+    .toc a{display:block; padding:.65rem .75rem; border-radius:10px; border:1px solid var(--border); background:rgba(0,0,0,.2); color:var(--text)}
+    .toc a:hover{background:rgba(0,0,0,.32)}
+
+    h2{font-size:clamp(1.15rem,2.2vw,1.5rem); margin:1.6rem 0 .5rem}
+    p, ul{color:var(--muted)} ul{padding-left:1.1rem} li{margin:.4rem 0}
+    .section{scroll-margin-top:90px}
+    .lead{background:rgba(255,255,255,.03); border:1px solid var(--border); color:var(--muted); padding:12px 14px; border-radius:10px}
+
+    .data-list{list-style:none; padding-left:0; margin:1rem 0 0}
+    .data-list li{background:#1f1f1f; border-left:4px solid var(--accent); border-radius:8px; padding:10px 14px; margin:.5rem 0; color:var(--muted)}
+    .data-list li strong{color:#e0e0e0}
+
+    @media (max-width: 768px){
+      .legal-container{max-width:100%; margin:1.25rem .5rem; padding:1rem}
+      .toc{padding:.5rem} .toc-grid{grid-template-columns:1fr}
+    }
+
+    @media print{
+      .back-link, .toc{display:none !important}
+      body{background:#fff; color:#000}
+      .legal-container{box-shadow:none; border:none}
+      a{color:#000; text-decoration:none}
+    }
+  </style>
+
+  <script>
+    // Smooth in-page anchor scrolling
+    document.addEventListener('click', function(e){
+      const a = e.target.closest('a[href^="#"]');
+      if(!a) return;
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if(el){
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        history.replaceState(null,'','#'+id);
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="starfield-container"></div>
+
+  <main>
+    <div class="legal-container" role="document" aria-labelledby="page-title">
+
+      <!-- Use a stable path so you don't break templates if endpoints differ -->
+      <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+
+      <header class="header">
+        <div>
+          <h1 id="page-title" class="title">CareSync Privacy Policy</h1>
+          <p class="subtitle">What we collect, how we use it, where it lives, and your choices.</p>
+        </div>
+        <div class="meta">
+          <span class="chip"><i class="fa-regular fa-calendar"></i> Last updated:
+            <time datetime="2025-11-08">November 8, 2025</time>
+          </span>
+          <span class="chip"><i class="fa-solid fa-flask"></i> Project scope: Academic demo</span>
+        </div>
+      </header>
+
+      <!-- Minimal table of contents (only the sections that actually exist) -->
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-grid">
+          <a href="#intro">1. Introduction</a>
+          <a href="#data">2. Data We Collect</a>
+          <a href="#use">3. How We Use Data</a>
+          <a href="#ai">4. AI Processing</a>
+          <a href="#calls">5. Calls & Files</a>
+          <a href="#storage">6. Storage & Location</a>
+          <a href="#security">7. Security</a>
+          <a href="#sharing">8. Sharing</a>
+          <a href="#choices">9. Your Choices & Deletion</a>
+          <a href="#changes">10. Changes</a>
+          <a href="#contact">11. Contact</a>
+        </div>
+      </nav>
+
+      <section id="intro" class="section">
+        <p class="lead">
+          CareSync is a student project. It’s for demonstration and evaluation only. Not a medical device. By using CareSync, you agree to this Policy and the Terms of Service.
+        </p>
+      </section>
+
+      <section id="data" class="section">
+        <h2>2. Data We Collect</h2>
+        <ul class="data-list">
+          <li><strong>Account:</strong> name, email, hashed password; for doctors, license/credentials and profile details.</li>
+          <li><strong>Interactions:</strong> appointments, call metadata, chats/messages, prescriptions, reminder settings.</li>
+          <li><strong>AI history:</strong> prompts you submit, generated responses, and references to images used in multimodal queries.</li>
+          <li><strong>Uploads (doctors):</strong> license/ID/profile photo stored on the server (<code>instance/uploads</code> by default).</li>
+          <li><strong>Technical:</strong> device/browser info, pages/events, and error logs to keep things running.</li>
+        </ul>
+      </section>
+
+      <section id="use" class="section">
+        <h2>3. How We Use Data</h2>
+        <ul>
+          <li>Provide features: accounts, appointments, video calls, chat, prescriptions, reminders.</li>
+          <li>Support and improve the service, troubleshoot issues, and keep the system reliable.</li>
+          <li>Send transactional emails and reminders you enable.</li>
+          <li>Protect users and the service (abuse prevention, security monitoring).</li>
+        </ul>
+      </section>
+
+      <section id="ai" class="section">
+        <h2>4. AI Processing</h2>
+        <ul>
+          <li>AI prompts and referenced images may be sent to Google’s Gemini API to generate replies.</li>
+          <li>Don’t submit real-world PHI or confidential medical records. This is an academic demo.</li>
+          <li>Your prompts and responses are stored with your account to show history.</li>
+        </ul>
+      </section>
+
+      <section id="calls" class="section">
+        <h2>5. Calls & Files</h2>
+        <ul>
+          <li>We keep minimal metadata needed to connect and manage video calls and quality safeguards.</li>
+          <li>Files shared during calls may be stored temporarily and may be watermarked; they are scheduled for deletion after the room closes or within a reasonable period.</li>
+        </ul>
+      </section>
+
+      <section id="storage" class="section">
+        <h2>6. Storage & Location</h2>
+        <p>Data is stored in our server-side database via SQLAlchemy. Development uses a local SQLite database (e.g., <code>medbot.db</code>); other deployments may use a managed DB. Uploads live under a private server directory (<code>instance/uploads</code>) unless configured otherwise.</p>
+      </section>
+
+      <section id="security" class="section">
+        <h2>7. Security</h2>
+        <ul>
+          <li>Passwords are stored using one-way hashing (e.g., Werkzeug utilities).</li>
+          <li>We apply transport-level protections and session safeguards appropriate for this project.</li>
+          <li>No method is perfect. Report suspected issues using the contact below.</li>
+        </ul>
+      </section>
+
+      <section id="sharing" class="section">
+        <h2>8. Sharing</h2>
+        <ul>
+          <li>Service providers that help run features (email, AI processing) under appropriate agreements.</li>
+          <li>Disclosures required by law or to protect rights, safety, and security.</li>
+          <li>We do not sell personal data.</li>
+        </ul>
+      </section>
+
+      <section id="choices" class="section">
+        <h2>9. Your Choices & Deletion</h2>
+        <ul>
+          <li>Update basic profile info in your account.</li>
+          <li>Delete your account from the Account page to remove your profile and associated records after a short safety window for queued operations.</li>
+        </ul>
+      </section>
+
+      <section id="changes" class="section">
+        <h2>10. Changes</h2>
+        <p>We may update this Policy. The “Last updated” date shows the effective version. Using CareSync after changes means you accept the updated Policy.</p>
+      </section>
+
+      <section id="contact" class="section">
+        <h2>11. Contact</h2>
+            <p>Questions about privacy or data? Email <a href="mailto:chinmai.enc@gmail.com">chinmai.enc@gmail.com</a>.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    © <span id="year"></span> CareSync (Academic). All rights reserved.
+  </footer>
+  <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+
+</body>
+</html>

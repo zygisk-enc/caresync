@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About CareSync</title>
+
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/icons/logo.png') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/icons/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <meta name="description" content="CareSync — concise overview of the product, architecture, and key capabilities." />
+  <meta name="robots" content="index,follow" />
+
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --surface:#121212;
+      --border:#232323;
+      --text:#e7e7e7;
+      --muted:#b3b3b3;
+      --primary:#F7971E;   /* accent kept from your theme */
+      --accent:#4f5bd5;    /* secondary accent */
+      --radius:14px;
+      --maxw:980px;
+      --line:1.7;
+    }
+        .section a[href*="github.com"] {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .45rem .8rem;
+        border-radius: 8px;
+        background: rgba(255,255,255,.05);
+        border: 1px solid var(--border);
+        }
+        .section a[href*="github.com"]:hover {
+        background: rgba(255,255,255,.1);
+        }
+
+    
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f9fc; --surface:#fff; --border:#e6ebf2; --text:#111; --muted:#4b5563;
+        --primary:#F7971E; --accent:#4f5bd5;
+      }
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font:16px/var(--line) system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .container{
+      max-width:var(--maxw); margin:2.5rem auto; padding:0 18px;
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+    }
+
+    .header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:12px;
+    }
+    .title{
+      margin:0; font-size:clamp(1.6rem,2.6vw,2.2rem); letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:.25rem 0 0; color:var(--muted); font-size:.98rem;
+    }
+    .back-link{
+      display:inline-flex; align-items:center; gap:.5rem; color:var(--muted); text-decoration:none;
+      margin-bottom:12px;
+    }
+    .back-link:hover{color:#ddd}
+
+    .grid{
+      display:grid; gap:16px;
+      grid-template-columns: 1fr 1fr;
+    }
+    .grid-1{display:grid; gap:12px}
+    .section h2{
+      font-size:clamp(1.15rem,2.2vw,1.5rem); margin:1.2rem 0 .5rem;
+      color:var(--text);
+    }
+    p{color:var(--muted); margin:.4rem 0 1rem}
+    ul{color:var(--muted); padding-left:1.1rem; margin:.2rem 0 1rem}
+    li{margin:.35rem 0}
+
+    .kpi{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;
+      font-size:.9rem; color:var(--muted);
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border); background:rgba(79,91,213,.08);
+    }
+
+    .pill-list{display:flex; flex-wrap:wrap; gap:8px; padding:0; list-style:none}
+    .pill{padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.03); font-size:.92rem}
+
+    .feature{
+      border:1px solid var(--border); border-radius:12px; padding:14px; background:rgba(255,255,255,.02);
+    }
+    .feature h3{margin:.1rem 0 .35rem; font-size:1.05rem}
+    .feature i{color:var(--primary); margin-right:6px}
+
+    .muted{color:var(--muted)}
+
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr}
+      .container{margin:1.5rem auto}
+    }
+
+    @media print{
+      .back-link{display:none}
+      body{background:#fff; color:#000}
+      a{color:#000; text-decoration:none}
+      .card{border:none}
+    }
+  </style>
+</head>
+<body>
+  <!-- keep your existing decorative background if used elsewhere -->
+  <div id="starfield-container"></div>
+
+  <main class="container">
+    <a href="{{ url_for('main.home') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+
+    <section class="card" role="document" aria-labelledby="about-title">
+      <header class="header">
+        <div>
+          <h1 id="about-title" class="title">About CareSync</h1>
+          <p class="subtitle">Concise overview of the product, architecture, and key capabilities.</p>
+        </div>
+        <div class="kpi">
+          <span class="chip"><i class="fa-regular fa-circle-check"></i> Multi-role: Users & Doctors</span>
+          <span class="chip"><i class="fa-solid fa-signal"></i> Real-time: Socket.IO + WebRTC</span>
+          <span class="chip"><i class="fa-solid fa-shield-halved"></i> Secure by design</span>
+        </div>
+      </header>
+
+      <div class="grid">
+        <!-- Left column -->
+        <div class="grid-1">
+          <div class="section">
+            <h2>What CareSync Is</h2>
+            <p>CareSync is a focused digital-health project that demonstrates patient–doctor workflows: account creation, scheduling, video consultations, messaging, prescriptions, and medication reminders. It also includes optional AI assistance for summarization and guidance.</p>
+          </div>
+
+          <div class="section">
+            <h2>Architecture</h2>
+            <ul class="pill-list">
+              <li class="pill">Python + Flask</li>
+              <li class="pill">Flask-SQLAlchemy (ORM)</li>
+              <li class="pill">Flask-SocketIO</li>
+              <li class="pill">WebRTC (media)</li>
+              <li class="pill">Flask-WTF (CSRF)</li>
+              <li class="pill">Flask-Migrate (Alembic)</li>
+            </ul>
+            <p class="muted">Dev storage uses SQLite; production can switch to a managed database via environment config.</p>
+          </div>
+
+          <div class="section">
+            <h2>Data Handling</h2>
+            <p>Passwords are stored using strong one-way hashing. Uploads are stored on the server and validated. Session and security headers are configured to reduce common risks. See the Privacy Policy for details.</p>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="grid-1">
+          <div class="feature">
+            <h3><i class="fa-solid fa-robot"></i> AI Assistance</h3>
+            <p>Integrates with Google’s Gemini for text and multimodal prompts. Interaction history may be stored to provide context and continuity.</p>
+          </div>
+          <div class="feature">
+            <h3><i class="fa-solid fa-video"></i> Consultations</h3>
+            <p>WebRTC for audio/video. Socket.IO handles signaling and room state. Optional watermarking and temporary storage for files shared in sessions.</p>
+          </div>
+          <div class="feature">
+            <h3><i class="fa-solid fa-calendar-check"></i> Scheduling & Reminders</h3>
+            <p>Appointments and medication reminders with email notifications. Background tasks run on a scheduler to send time-based messages.</p>
+          </div>
+          <div class="feature">
+            <h3><i class="fa-solid fa-map-location-dot"></i> Location Utilities</h3>
+            <p>Map views for clinics and a blood-bank locator using distance calculations to surface nearby resources.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Project Status</h2>
+        <p>CareSync is a course project intended for demonstration and evaluation. It is not a medical device and is not intended for real-world clinical use.</p>
+      </div>
+
+      <div class="section">
+        <h2>Attribution</h2>
+        <p>CareSync uses open-source libraries under their respective licenses. Icons by Font Awesome. Map tiles and data as credited in the application.</p>
+      </div>
+
+      <div class="section">
+        <h2>Contact</h2>
+            <p>Questions about privacy or data? Email
+            <a href="mailto:chinmai.enc@gmail.com">chinmai.enc@gmail.com</a>.
+            </p>
+        
+        <p>
+            View the full project source on
+            <a href="https://github.com/zygisk-enc/caresync" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i> GitHub
+            </a>
+        </p>
+
+      </div>
+       
+  </main>
+  <footer class="site-footer">
+    © <span id="year"></span> CareSync (Academic). All rights reserved.
+  </footer>
+  <!-- Optional background JS retained from your project -->
+  <script src="{{ url_for('static', filename='js/starfield-toggle.js') }}"></script>
+
+</body>
+</html>

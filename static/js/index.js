@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (disagreeBtn) {
-        disagreeBtn.addEventListener('click', () => { window.close(); });
+        disagreeBtn.addEventListener('click', () => { window.location.href = '/login'; });
     }
 
     // --- NEW: Image Upload Handling Logic ---

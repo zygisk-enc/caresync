@@ -115,6 +115,10 @@
                         <a href="{{ url_for('messaging.list_chats') }}" class="quick-action-btn">
                             <i class="fas fa-comment-dots"></i> <span>Messages</span>
                         </a>
+                        </a>
+                            <a href="https://dailymed.nlm.nih.gov/dailymed/" target="_blank" class="quick-action-btn">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>DailyMed Search</span> </a>
 
                     {% else %} <a href="{{ url_for('doctors.find_doctors') }}" class="quick-action-btn">
                             <i class="fas fa-user-md"></i> <span>Find Doctors</span>
@@ -149,9 +153,9 @@
         </main>
         
         <footer>
-            <a href="#">About CareSync</a>
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
+            <a href="{{ url_for('main.about') }}">About CareSync</a>
+            <a href="{{ url_for('main.terms') }}">Terms</a>
+            <a href="{{ url_for('main.privacy') }}">Privacy</a>
         </footer>
     </div>
     
