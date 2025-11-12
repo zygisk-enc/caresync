@@ -1,6 +1,6 @@
 # 🩺 CareSync — Intelligent Telehealth Platform
 
-CareSync is a complete AI-powered telehealth system built using **Flask**, designed to connect doctors and patients through secure chat, video calls, prescriptions, and automated reminders — all in one professional and responsive interface.
+CareSync is a full-stack AI-powered telehealth system built using **Flask**, designed to connect doctors and patients through secure chat, video calls, prescriptions, and automated reminders — all in one professional and responsive interface.
 
 ---
 
@@ -57,43 +57,11 @@ CareSync unifies healthcare communication into one system. It includes doctor an
 
 ---
 
-## 🗂️ Project Structure
-
-```
-CareSync/
-│
-├── app.py                     # Main application entry
-├── extensions.py              
-├── models.py                  
-│
-├── auth_routes.py
-├── admin_routes.py
-├── main_routes.py
-├── doctor_routes.py
-├── messaging_routes.py
-├── dashboard_routes.py
-├── prescription_routes.py
-├── video_call_routes.py
-├── blood_bank_routes.py
-├── history_routes.py
-│
-├── scheduler.py                # Email reminder scheduler
-├── import_blood_banks.py
-│
-├── templates/                  # HTML templates (Jinja2)
-├── static/                     # CSS / JS / uploads / datasets
-│
-├── requirements.txt
-└── README.md
-```
-
----
-
 ## 🚀 Installation Guide
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/caresync.git
+git clone https://github.com/zygisk-enc/caresync.git
 cd caresync
 ```
 
@@ -109,18 +77,30 @@ venv\Scripts\activate       # Windows
 pip install -r requirements.txt
 ```
 
-### 4. Create Environment File
-Make a `.env` file in the root directory:
-```
-SECRET_KEY=your_secret_key
-SQLALCHEMY_DATABASE_URI=sqlite:///caresync.db
-MAIL_SERVER=smtp.gmail.com
+### 4. Create Environment File (.env)
+Example `.env` configuration (placeholders — replace with your own values):
+
+```env
+SECRET_KEY="your_secret_key_here"
+GOOGLE_API_KEY="your_google_gemini_api_key_here"
+BLOOD_API_KEY="your_blood_bank_api_key_here"
+ADMIN_EMAIL="your_admin_email_here"
+ADMIN_PASSWORD="your_admin_password_here"
+MAIL_SERVER="smtp.gmail.com"
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_password
-GOOGLE_API_KEY=your_gemini_api_key
+MAIL_USERNAME="your_email_here"
+MAIL_PASSWORD="your_email_app_password_here"
+ADMIN_URL_PREFIX="/your-random-admin-url-prefix"
+SSL_CERTFILE="certs/your-cert-file.pem"
+SSL_KEYFILE="certs/your-key-file.pem"
+SQLALCHEMY_DATABASE_URI="sqlite:///caresync.db"
 ```
+
+> ⚠️ **Important:** Never commit `.env` or credentials to GitHub.  
+> Keep this file local or use environment variables in production.
+
+---
 
 ### 5. Initialize the Database
 ```bash
@@ -135,6 +115,7 @@ python app.py
 ```
 
 Visit: [http://localhost:5000](http://localhost:5000)
+or use mkcert to generate a certificate to get CA and https
 
 ---
 
@@ -151,7 +132,6 @@ python -c "from scheduler import send_call_reminders; from app import app; send_
 ---
 
 ## 🔒 Security Guidelines
-- Keep `.env` private — never commit secrets  
 - Use HTTPS and secure cookies  
 - Enable CSRF protection for all forms  
 - Use strong mail passwords or App Passwords
