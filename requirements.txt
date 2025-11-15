@@ -26,7 +26,7 @@ Flask-Cors==4.0.1
 Flask-APScheduler==1.13.1
 
 # If you use image uploads / processing
-Pillow==10.3.0
+Pillow
 
 # Optional: For using requests with APIs like Gemini
 requests==2.32.3
@@ -36,7 +36,7 @@ click==8.1.7
 
 # If you ever use SSL via Werkzeug (already supported but safe to include)
 cryptography==43.0.1
-Flask-Migrate alembic
+Flask-Migrate 
 Flask-Mail
 google-generativeai
 pdf2image
