@@ -1,16 +1,16 @@
-# 🩺 CareSync — Intelligent Telehealth Platform
+# CareSync — Intelligent Telehealth Platform
 
 CareSync is a full-stack AI-powered telehealth system built using **Flask**, designed to connect doctors and patients through secure chat, video calls, prescriptions, and automated reminders — all in one professional and responsive interface.
 
 ---
 
-## 🌟 Overview
+###  Overview
 
 CareSync unifies healthcare communication into one system. It includes doctor and patient dashboards, appointment management, real-time messaging, and Gemini AI integration for smart health insights.
 
 ---
 
-## 🧩 Tech Stack
+###  Tech Stack
 
 ### Backend
 - **Python 3.x**, **Flask**
@@ -32,32 +32,32 @@ CareSync unifies healthcare communication into one system. It includes doctor an
 
 ---
 
-## ⚙️ Core Features
+###  Core Features
 
-### 👨‍⚕️ Doctors
+###  Doctors
 - Approve and manage patient appointments & calls  
 - Issue digital e-prescriptions  
 - Toggle real-time availability  
 - Review chat and call history
 
-### 🧍‍♂️ Patients
+###  Patients
 - Search and book verified doctors  
 - Access health records, prescriptions, and reminders  
 - Start secure chat or video calls  
 - Receive AI-driven insights via Gemini
 
-### 💬 Communication & Automation
+###  Communication & Automation
 - **Socket.IO** for real-time updates  
 - **Flask-Mail + APScheduler** for automated reminders  
 - **AI prompt response** system for intelligent interactions
 
-### 🩸 Blood Bank Integration
+###  Blood Bank Integration
 - Built-in dataset of Indian blood banks  
 - Location-based filtering using the Haversine algorithm
 
 ---
 
-## 🚀 Installation Guide
+###  Installation Guide
 
 ### 1. Clone the Repository
 ```bash
@@ -119,7 +119,7 @@ or use mkcert to generate a certificate to get CA and https
 
 ---
 
-## ⏰ Automated Tasks
+###  Automated Tasks
 CareSync uses **APScheduler** for:
 - Video call reminders
 - Medication notifications
@@ -131,14 +131,14 @@ python -c "from scheduler import send_call_reminders; from app import app; send_
 
 ---
 
-## 🔒 Security Guidelines
+###  Security Guidelines
 - Use HTTPS and secure cookies  
 - Enable CSRF protection for all forms  
 - Use strong mail passwords or App Passwords
 
 ---
 
-## 🧠 Architecture Diagram
+###  Architecture Diagram
 
 ```
 Frontend (HTML, CSS, JS)
@@ -154,7 +154,7 @@ Gemini AI API → Smart Prompt Responses
 
 ---
 
-## 🧭 Roadmap
+###  Roadmap
 - Dockerized deployment  
 - Two-Factor Authentication  
 - Admin analytics dashboard  
@@ -163,7 +163,7 @@ Gemini AI API → Smart Prompt Responses
 
 ---
 
-## 🧑‍💻 Contributing
+###  Contributing
 1. Fork the repository  
 2. Create your feature branch (`git checkout -b feature/new-feature`)  
 3. Commit changes (`git commit -m "Add new feature"`)  
@@ -172,7 +172,7 @@ Gemini AI API → Smart Prompt Responses
 
 ---
 
-## 🪪 License
+### 🪪 License
 Licensed under the **MIT License**.
 
 --
