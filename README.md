@@ -56,6 +56,12 @@ CareSync unifies healthcare communication into one system. It includes doctor an
 - Location-based filtering using the Haversine algorithm
 
 ---
+## 🎥 PC Demo
+https://github.com/zygisk-enc/caresync/blob/main/pc%20demo.mp4
+
+## 📱 Mobile Demo
+https://github.com/zygisk-enc/caresync/blob/main/phone%20demo.mp4
+
 
 ###  Installation Guide
 
